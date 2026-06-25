@@ -9,12 +9,23 @@ React + Excalidraw load from a pinned CDN.
 - Node 22+
 - Google Chrome / Chromium (for the render self-review). Set `CHROME_BIN` if not auto-detected.
 
-## Install (as a skill)
-Symlink the skill into your agent skills directory:
+## Install
+
+### Recommended: as a Claude Code plugin
+This repo is a plugin marketplace. In Claude Code:
+```
+/plugin marketplace add lojma/excalidraw-diagrams
+/plugin install excalidraw-diagrams@excalidraw-diagrams
+```
+The skill then auto-activates (invoke manually as `/excalidraw-diagrams:excalidraw-diagrams`).
+To update after a new release: `/plugin update excalidraw-diagrams`.
+
+### Alternative: symlink (for local development)
+Edit-in-place without reinstalling:
 ```bash
 ln -sfn "$PWD/skills/excalidraw-diagrams" ~/.claude/skills/excalidraw-diagrams
 ```
-Or install this repo as a Claude Code plugin (it ships `.claude-plugin/plugin.json`).
+Use one or the other, not both (they'd register the same skill twice).
 
 ## Usage
 Ask Claude to "draw" or "diagram" a flow. Under the hood, the skill writes
