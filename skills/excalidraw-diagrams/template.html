@@ -22,7 +22,11 @@
 <pre id="err"></pre>
 <script type="module">
   const TITLE = __TITLE__;
-  const MERMAID = __MERMAID__;
+  const MODE = __MODE__;          // "mermaid" | "json"
+  const MERMAID = __MERMAID__;    // used when MODE === "mermaid"
+  const ELEMENTS = __ELEMENTS__;  // Excalidraw skeleton array, used when MODE === "json"
+  const IMAGES = __IMAGES__;      // raw image elements (embedded icons), json mode
+  const FILES = __FILES__;        // Excalidraw files map (icon dataURLs), json mode
   const STYLE = __STYLE__;
 
   const fail = (m) => { document.getElementById("err").textContent += m + "\n"; };
@@ -49,10 +53,26 @@
   }
 
   try {
-    const { parseMermaidToExcalidraw } = await import("https://esm.sh/@excalidraw/mermaid-to-excalidraw@1.1.2");
+    // Preload the hand-drawn font BEFORE convert so bound-label text metrics use the
+    // real font (otherwise container labels can fall back to a serif on a fast render).
+    for (const f of ["400 20px Virgil", "400 20px Excalifont"]) {
+      try { await document.fonts.load(f); } catch {}
+    }
+    try { await document.fonts.ready; } catch {}
+
     const Ex = window.ExcalidrawLib;
-    const { elements, files } = await parseMermaidToExcalidraw(MERMAID, { fontSize: STYLE.fontSize ?? 18 });
-    const els = Ex.convertToExcalidrawElements(elements);
+    let skeleton, files = {};
+    if (MODE === "json") {
+      skeleton = ELEMENTS; files = FILES || {};
+    } else {
+      const { parseMermaidToExcalidraw } = await import("https://esm.sh/@excalidraw/mermaid-to-excalidraw@1.1.2");
+      const r = await parseMermaidToExcalidraw(MERMAID, { fontSize: STYLE.fontSize ?? 18 });
+      skeleton = r.elements; files = r.files || {};
+    }
+    const now = Date.now();
+    for (const f of Object.values(files)) { f.created = now; f.lastRetrieved = now; }
+    // Convert skeleton nodes, then append raw image elements (icons) on top.
+    const els = Ex.convertToExcalidrawElements(skeleton).concat(IMAGES || []);
     applyStyle(els, STYLE);
 
     let api = null;
@@ -65,6 +85,7 @@
       },
       excalidrawAPI: (a) => {
         api = a;
+        try { if (Object.keys(files).length) api.addFiles(Object.values(files)); } catch (e) { fail("addFiles: " + e); }
         // Zoom to fit the whole diagram so the live preview AND the self-review
         // screenshot show every node, not just the top viewport.
         requestAnimationFrame(() => {

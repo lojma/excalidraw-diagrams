@@ -8,10 +8,22 @@ const tpl = readFileSync(
   "utf8"
 );
 
-test("template has the three substitution tokens", () => {
+test("template has the substitution tokens (mermaid + json modes)", () => {
   assert.ok(tpl.includes("__TITLE__"), "missing __TITLE__");
+  assert.ok(tpl.includes("__MODE__"), "missing __MODE__");
   assert.ok(tpl.includes("__MERMAID__"), "missing __MERMAID__");
+  assert.ok(tpl.includes("__ELEMENTS__"), "missing __ELEMENTS__");
+  assert.ok(tpl.includes("__IMAGES__"), "missing __IMAGES__");
+  assert.ok(tpl.includes("__FILES__"), "missing __FILES__");
   assert.ok(tpl.includes("__STYLE__"), "missing __STYLE__");
+});
+
+test("template wires embedded icon files into the scene", () => {
+  assert.ok(tpl.includes("addFiles"), "json mode must register icon files");
+});
+
+test("template preloads the hand-drawn font before convert", () => {
+  assert.ok(tpl.includes("document.fonts.load"), "missing font preload");
 });
 
 test("template pins the expected CDN versions", () => {

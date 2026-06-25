@@ -1,0 +1,944 @@
+{
+  "javascript": {
+    "file": "javascript.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "programming",
+      "language"
+    ]
+  },
+  "typescript": {
+    "file": "typescript.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "programming",
+      "transpiler",
+      "javascript",
+      "language"
+    ]
+  },
+  "python": {
+    "file": "python.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "programming",
+      "language"
+    ]
+  },
+  "java": {
+    "file": "java.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "programming",
+      "language",
+      "jvm"
+    ]
+  },
+  "kotlin": {
+    "file": "kotlin.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "language",
+      "jetbrains",
+      "jvm"
+    ]
+  },
+  "swift": {
+    "file": "swift.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "language"
+    ]
+  },
+  "go": {
+    "file": "go.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "language"
+    ]
+  },
+  "rust": {
+    "file": "rust.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "programming",
+      "language"
+    ]
+  },
+  "ruby": {
+    "file": "ruby.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "programming",
+      "language"
+    ]
+  },
+  "php": {
+    "file": "php.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "programming",
+      "language"
+    ]
+  },
+  "csharp": {
+    "file": "csharp.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "language"
+    ]
+  },
+  "cplusplus": {
+    "file": "cplusplus.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "language"
+    ]
+  },
+  "c": {
+    "file": "c.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "language"
+    ]
+  },
+  "dart": {
+    "file": "dart.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "programming",
+      "language"
+    ]
+  },
+  "scala": {
+    "file": "scala.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "programming",
+      "language",
+      "jvm"
+    ]
+  },
+  "elixir": {
+    "file": "elixir.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "language"
+    ]
+  },
+  "lua": {
+    "file": "lua.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "programming",
+      "language",
+      "object-oriented",
+      "scripting",
+      "procedural",
+      "prototype-based",
+      "functional"
+    ]
+  },
+  "bash": {
+    "file": "bash.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "shell",
+      "command",
+      "scripting"
+    ]
+  },
+  "react": {
+    "file": "react.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "framework"
+    ]
+  },
+  "vuejs": {
+    "file": "vuejs.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "framework"
+    ]
+  },
+  "angular": {
+    "file": "angular.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "framework",
+      "javascript"
+    ]
+  },
+  "svelte": {
+    "file": "svelte.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "javascript",
+      "framework",
+      "compiler"
+    ]
+  },
+  "nextjs": {
+    "file": "nextjs.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "framework"
+    ]
+  },
+  "nuxtjs": {
+    "file": "nuxtjs.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "js",
+      "javascript",
+      "framework",
+      "frontend",
+      "vuejs"
+    ]
+  },
+  "tailwindcss": {
+    "file": "tailwindcss.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "css",
+      "framework"
+    ]
+  },
+  "bootstrap": {
+    "file": "bootstrap.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "css",
+      "framework",
+      "html",
+      "javascript",
+      "library"
+    ]
+  },
+  "html5": {
+    "file": "html5.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "programming",
+      "language"
+    ]
+  },
+  "css3": {
+    "file": "css3.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "language",
+      "programming"
+    ]
+  },
+  "redux": {
+    "file": "redux.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "framework"
+    ]
+  },
+  "threejs": {
+    "file": "threejs.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "javascript",
+      "framework"
+    ]
+  },
+  "nodejs": {
+    "file": "nodejs.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "javascript",
+      "language"
+    ]
+  },
+  "express": {
+    "file": "express.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "framework"
+    ]
+  },
+  "nestjs": {
+    "file": "nestjs.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "framework"
+    ]
+  },
+  "django": {
+    "file": "django.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": []
+  },
+  "flask": {
+    "file": "flask.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "python",
+      "framework"
+    ]
+  },
+  "fastapi": {
+    "file": "fastapi.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "python",
+      "framework"
+    ]
+  },
+  "spring": {
+    "file": "spring.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "framework"
+    ]
+  },
+  "rails": {
+    "file": "rails.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "framework"
+    ]
+  },
+  "laravel": {
+    "file": "laravel.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "php",
+      "framework"
+    ]
+  },
+  "dotnetcore": {
+    "file": "dotnetcore.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "framework"
+    ]
+  },
+  "graphql": {
+    "file": "graphql.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "language",
+      "data",
+      "query"
+    ]
+  },
+  "flutter": {
+    "file": "flutter.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "framework",
+      "sdk"
+    ]
+  },
+  "android": {
+    "file": "android.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "os",
+      "mobile"
+    ]
+  },
+  "postgresql": {
+    "file": "postgresql.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "database"
+    ]
+  },
+  "mysql": {
+    "file": "mysql.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "database",
+      "language"
+    ]
+  },
+  "mongodb": {
+    "file": "mongodb.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "database"
+    ]
+  },
+  "redis": {
+    "file": "redis.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "server"
+    ]
+  },
+  "sqlite": {
+    "file": "sqlite.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "sql",
+      "database",
+      "db"
+    ]
+  },
+  "mariadb": {
+    "file": "mariadb.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "database",
+      "sql",
+      "open-source"
+    ]
+  },
+  "cassandra": {
+    "file": "cassandra.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "nosql",
+      "database",
+      "open-source"
+    ]
+  },
+  "elasticsearch": {
+    "file": "elasticsearch.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "elastic",
+      "data",
+      "logs"
+    ]
+  },
+  "neo4j": {
+    "file": "neo4j.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "database"
+    ]
+  },
+  "rabbitmq": {
+    "file": "rabbitmq.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "message-broker",
+      "open-source"
+    ]
+  },
+  "apachekafka": {
+    "file": "apachekafka.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "streaming",
+      "open-source"
+    ]
+  },
+  "amazonwebservices": {
+    "file": "amazonwebservices.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "cloud",
+      "hosting",
+      "server"
+    ]
+  },
+  "googlecloud": {
+    "file": "googlecloud.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "google",
+      "cloud"
+    ]
+  },
+  "azure": {
+    "file": "azure.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "cloud",
+      "devops"
+    ]
+  },
+  "digitalocean": {
+    "file": "digitalocean.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "cloud",
+      "hosting",
+      "database",
+      "storage"
+    ]
+  },
+  "heroku": {
+    "file": "heroku.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "cloud"
+    ]
+  },
+  "vercel": {
+    "file": "vercel.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "hosting",
+      "platform",
+      "deployment",
+      "git"
+    ]
+  },
+  "cloudflare": {
+    "file": "cloudflare.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "web",
+      "cdn",
+      "dns",
+      "proxy",
+      "security"
+    ]
+  },
+  "docker": {
+    "file": "docker.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "platform",
+      "deploy"
+    ]
+  },
+  "kubernetes": {
+    "file": "kubernetes.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "container",
+      "deployment"
+    ]
+  },
+  "terraform": {
+    "file": "terraform.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "deployment",
+      "architecture",
+      "automation"
+    ]
+  },
+  "ansible": {
+    "file": "ansible.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "automation",
+      "provisioning",
+      "deployment",
+      "continuous-delivery"
+    ]
+  },
+  "jenkins": {
+    "file": "jenkins.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "platform",
+      "integration",
+      "server"
+    ]
+  },
+  "nginx": {
+    "file": "nginx.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "server"
+    ]
+  },
+  "apache": {
+    "file": "apache.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "php"
+    ]
+  },
+  "grafana": {
+    "file": "grafana.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "monitoring",
+      "analytics",
+      "metrics",
+      "logs",
+      "visualization",
+      "web-application"
+    ]
+  },
+  "prometheus": {
+    "file": "prometheus.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "monitoring",
+      "observability",
+      "analysis"
+    ]
+  },
+  "git": {
+    "file": "git.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "version-control"
+    ]
+  },
+  "github": {
+    "file": "github.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "version-control"
+    ]
+  },
+  "gitlab": {
+    "file": "gitlab.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "version-control"
+    ]
+  },
+  "bitbucket": {
+    "file": "bitbucket.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "version-control"
+    ]
+  },
+  "figma": {
+    "file": "figma.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "design"
+    ]
+  },
+  "postman": {
+    "file": "postman.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "tool",
+      "testing"
+    ]
+  },
+  "vscode": {
+    "file": "vscode.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "editor",
+      "ide"
+    ]
+  },
+  "linux": {
+    "file": "linux.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "os"
+    ]
+  },
+  "ubuntu": {
+    "file": "ubuntu.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "os",
+      "open-source",
+      "linux"
+    ]
+  },
+  "debian": {
+    "file": "debian.svg",
+    "source": "devicon",
+    "license": "MIT",
+    "tags": [
+      "os",
+      "server"
+    ]
+  },
+  "server": {
+    "file": "server.svg",
+    "source": "lucide",
+    "license": "ISC",
+    "tags": [
+      "generic"
+    ]
+  },
+  "database": {
+    "file": "database.svg",
+    "source": "lucide",
+    "license": "ISC",
+    "tags": [
+      "generic"
+    ]
+  },
+  "mobile": {
+    "file": "mobile.svg",
+    "source": "lucide",
+    "license": "ISC",
+    "tags": [
+      "generic"
+    ]
+  },
+  "web": {
+    "file": "web.svg",
+    "source": "lucide",
+    "license": "ISC",
+    "tags": [
+      "generic"
+    ]
+  },
+  "shield": {
+    "file": "shield.svg",
+    "source": "lucide",
+    "license": "ISC",
+    "tags": [
+      "generic"
+    ]
+  },
+  "key": {
+    "file": "key.svg",
+    "source": "lucide",
+    "license": "ISC",
+    "tags": [
+      "generic"
+    ]
+  },
+  "gateway": {
+    "file": "gateway.svg",
+    "source": "lucide",
+    "license": "ISC",
+    "tags": [
+      "generic"
+    ]
+  },
+  "queue": {
+    "file": "queue.svg",
+    "source": "lucide",
+    "license": "ISC",
+    "tags": [
+      "generic"
+    ]
+  },
+  "cloud": {
+    "file": "cloud.svg",
+    "source": "lucide",
+    "license": "ISC",
+    "tags": [
+      "generic"
+    ]
+  },
+  "globe": {
+    "file": "globe.svg",
+    "source": "lucide",
+    "license": "ISC",
+    "tags": [
+      "generic"
+    ]
+  },
+  "user": {
+    "file": "user.svg",
+    "source": "lucide",
+    "license": "ISC",
+    "tags": [
+      "generic"
+    ]
+  },
+  "bell": {
+    "file": "bell.svg",
+    "source": "lucide",
+    "license": "ISC",
+    "tags": [
+      "generic"
+    ]
+  },
+  "cache": {
+    "file": "cache.svg",
+    "source": "lucide",
+    "license": "ISC",
+    "tags": [
+      "generic"
+    ]
+  },
+  "lock": {
+    "file": "lock.svg",
+    "source": "lucide",
+    "license": "ISC",
+    "tags": [
+      "generic"
+    ]
+  },
+  "api": {
+    "file": "api.svg",
+    "source": "lucide",
+    "license": "ISC",
+    "tags": [
+      "generic"
+    ]
+  },
+  "apple": {
+    "file": "apple.svg",
+    "source": "simple-icons",
+    "license": "CC0-1.0",
+    "tags": [
+      "social"
+    ]
+  },
+  "google": {
+    "file": "google.svg",
+    "source": "simple-icons",
+    "license": "CC0-1.0",
+    "tags": [
+      "social"
+    ]
+  },
+  "facebook": {
+    "file": "facebook.svg",
+    "source": "simple-icons",
+    "license": "CC0-1.0",
+    "tags": [
+      "social"
+    ]
+  },
+  "js": {
+    "file": "javascript.svg",
+    "alias": "javascript"
+  },
+  "ts": {
+    "file": "typescript.svg",
+    "alias": "typescript"
+  },
+  "py": {
+    "file": "python.svg",
+    "alias": "python"
+  },
+  "golang": {
+    "file": "go.svg",
+    "alias": "go"
+  },
+  "node": {
+    "file": "nodejs.svg",
+    "alias": "nodejs"
+  },
+  "vue": {
+    "file": "vuejs.svg",
+    "alias": "vuejs"
+  },
+  "next": {
+    "file": "nextjs.svg",
+    "alias": "nextjs"
+  },
+  "nuxt": {
+    "file": "nuxtjs.svg",
+    "alias": "nuxtjs"
+  },
+  "tailwind": {
+    "file": "tailwindcss.svg",
+    "alias": "tailwindcss"
+  },
+  "postgres": {
+    "file": "postgresql.svg",
+    "alias": "postgresql"
+  },
+  "mongo": {
+    "file": "mongodb.svg",
+    "alias": "mongodb"
+  },
+  "k8s": {
+    "file": "kubernetes.svg",
+    "alias": "kubernetes"
+  },
+  "aws": {
+    "file": "amazonwebservices.svg",
+    "alias": "amazonwebservices"
+  },
+  "gcp": {
+    "file": "googlecloud.svg",
+    "alias": "googlecloud"
+  },
+  "kafka": {
+    "file": "apachekafka.svg",
+    "alias": "apachekafka"
+  },
+  "dotnet": {
+    "file": "dotnetcore.svg",
+    "alias": "dotnetcore"
+  },
+  "rn": {
+    "file": "react.svg",
+    "alias": "react"
+  }
+}

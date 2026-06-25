@@ -1,0 +1,8 @@
+[
+  { "frame": true, "role": "data", "label": "Data", "x": 40, "y": 40, "width": 360, "height": 150 },
+  { "type": "rectangle", "role": "service", "icon": "shield", "x": 120, "y": 230, "width": 200, "height": 56, "label": { "text": "Auth" } },
+  { "type": "rectangle", "role": "data", "icon": "postgres", "x": 70, "y": 100, "width": 170, "height": 56, "label": { "text": "Postgres" } },
+  { "type": "ellipse", "role": "data", "icon": "redis", "x": 250, "y": 96, "width": 110, "height": 96, "label": { "text": "Redis" } },
+  { "type": "arrow", "x": 220, "y": 228, "width": -60, "height": -70, "points": [[0, 0], [-60, -70]], "endArrowhead": "arrow" },
+  { "type": "arrow", "x": 240, "y": 228, "width": 60, "height": -74, "points": [[0, 0], [60, -74]], "endArrowhead": "arrow" }
+]
