@@ -657,7 +657,7 @@ jobs:
       - uses: browser-actions/setup-chrome@v1
         id: chrome
       - name: Unit tests
-        run: node --test test/
+        run: node --test test/*.test.mjs
       - name: End-to-end smoke test
         env:
           CHROME_BIN: ${{ steps.chrome.outputs.chrome-path }}
@@ -970,8 +970,10 @@ MIT
 
 - [ ] **Step 4: Run the full test suite once more**
 
-Run: `cd ~/excalidraw-diagrams && node --test test/ && node test/smoke.mjs`
+Run: `cd ~/excalidraw-diagrams && node --test test/*.test.mjs && node test/smoke.mjs`
 Expected: all unit tests pass; smoke test prints `SMOKE OK`.
+
+> NOTE: Use the explicit glob `test/*.test.mjs` (not `test/` — the directory form is broken in Node 26 — and not bare `node --test`, which would also sweep in `test/smoke.mjs`).
 
 - [ ] **Step 5: Commit**
 
