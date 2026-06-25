@@ -77,6 +77,15 @@ browser. Two authoring paths, picked by diagram type:
 5. **Tell the user** it's open, and that the **💾 Save .excalidraw** button
    (top-right) downloads an editable file if they want one.
 
+6. **Iterate on their edits (optional).** If the user tweaks the diagram in the browser
+   and clicks 💾 Save .excalidraw, reload that file as-is to refine it — it keeps their
+   manual layout/edits:
+   ```bash
+   node "$SKILL/render.mjs" --from-excalidraw edited.excalidraw --title "Auth flow"
+   ```
+   Read the `.excalidraw` JSON to see what they changed, make targeted improvements
+   (realign, recolor, add an icon), and re-render.
+
 ## Quality rules (keep layouts clean)
 
 - **Shape carries meaning:** `([start])`, `{decision}`, `[process]`,

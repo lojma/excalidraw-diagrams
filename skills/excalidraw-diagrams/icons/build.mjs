@@ -16,30 +16,22 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const REFS = join(HERE, "..", "references");
 const GENERIC_COLOR = "#343a40";
 
-// Curated popular tech (devicon slugs). The long tail (578 total) can be added with
-// `node build.mjs --add <slug>`.
-const DEVICON = [
-  // languages
-  "javascript","typescript","python","java","kotlin","swift","go","rust","ruby","php","csharp","cplusplus","c","dart","scala","elixir","lua","bash",
-  // frontend
-  "react","vuejs","angular","svelte","nextjs","nuxtjs","tailwindcss","bootstrap","html5","css3","redux","threejs",
-  // backend / runtime
-  "nodejs","deno","express","nestjs","django","flask","fastapi","spring","rails","laravel","dotnetcore","graphql",
-  // mobile
-  "flutter","android",
-  // databases
-  "postgresql","mysql","mongodb","redis","sqlite","mariadb","cassandra","elasticsearch","neo4j",
-  // messaging
-  "rabbitmq","apachekafka",
-  // cloud
-  "amazonwebservices","googlecloud","azure","digitalocean","heroku","vercel","cloudflare",
-  // devops / infra
-  "docker","kubernetes","terraform","ansible","jenkins","nginx","apache","grafana","prometheus",
-  // tools / vcs
-  "git","github","gitlab","bitbucket","figma","postman","vscode",
-  // os
-  "linux","ubuntu","debian",
-];
+// Curated popular tech (devicon slugs), grouped into clean categories for the lookup
+// table. The long tail (578 total) can be added with `node build.mjs --add <slug>`.
+const DEVICON_CATS = {
+  Languages: ["javascript","typescript","python","java","kotlin","swift","go","rust","ruby","php","csharp","cplusplus","c","dart","scala","elixir","lua","bash"],
+  Frontend: ["react","vuejs","angular","svelte","nextjs","nuxtjs","tailwindcss","bootstrap","html5","css3","redux","threejs"],
+  Backend: ["nodejs","express","nestjs","django","flask","fastapi","spring","rails","laravel","dotnetcore","graphql"],
+  Mobile: ["flutter","android"],
+  Databases: ["postgresql","mysql","mongodb","redis","sqlite","mariadb","cassandra","elasticsearch","neo4j"],
+  Messaging: ["rabbitmq","apachekafka"],
+  Cloud: ["amazonwebservices","googlecloud","azure","digitalocean","heroku","vercel","cloudflare"],
+  DevOps: ["docker","kubernetes","terraform","ansible","jenkins","nginx","apache","grafana","prometheus"],
+  Tools: ["git","github","gitlab","bitbucket","figma","postman","vscode"],
+  OS: ["linux","ubuntu","debian"],
+};
+const DEVICON = Object.values(DEVICON_CATS).flat();
+const CATEGORY_OF = Object.fromEntries(Object.entries(DEVICON_CATS).flatMap(([cat, names]) => names.map((n) => [n, cat])));
 
 // generic non-brand shapes (lucide slug)
 const GENERIC = {
@@ -94,7 +86,7 @@ for (const name of devNames) {
   const variant = pickVariant(entry.versions);
   const svg = await fetchText(`https://cdn.jsdelivr.net/gh/devicons/devicon/icons/${name}/${name}-${variant}.svg`);
   writeFileSync(`${HERE}/${name}.svg`, svg.trim() + "\n");
-  manifest[name] = { file: `${name}.svg`, source: "devicon", license: "MIT", tags: entry.tags || [] };
+  manifest[name] = { file: `${name}.svg`, source: "devicon", license: "MIT", tags: [CATEGORY_OF[name] || "Tools"] };
   console.log("devicon", name, variant);
 }
 
@@ -102,7 +94,7 @@ for (const [name, slug] of Object.entries(GENERIC)) {
   let svg = await fetchText(`https://cdn.jsdelivr.net/npm/lucide-static@latest/icons/${slug}.svg`);
   svg = svg.replace(/stroke="currentColor"/g, `stroke="${GENERIC_COLOR}"`);
   writeFileSync(`${HERE}/${name}.svg`, svg.trim() + "\n");
-  manifest[name] = { file: `${name}.svg`, source: "lucide", license: "ISC", tags: ["generic"] };
+  manifest[name] = { file: `${name}.svg`, source: "lucide", license: "ISC", tags: ["Generic"] };
   console.log("lucide", name);
 }
 
@@ -110,7 +102,7 @@ for (const [name, { slug, color }] of Object.entries(SOCIAL)) {
   let svg = await fetchText(`https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/${slug}.svg`);
   svg = svg.replace(/<svg /, `<svg fill="${color}" `);
   writeFileSync(`${HERE}/${name}.svg`, svg.trim() + "\n");
-  manifest[name] = { file: `${name}.svg`, source: "simple-icons", license: "CC0-1.0", tags: ["social"] };
+  manifest[name] = { file: `${name}.svg`, source: "simple-icons", license: "CC0-1.0", tags: ["Social"] };
   console.log("simple-icons", name);
 }
 
@@ -142,9 +134,10 @@ mkdirSync(REFS, { recursive: true });
 const groups = {};
 for (const [name, m] of Object.entries(manifest)) {
   if (m.alias) continue;
-  const tag = (m.tags && m.tags[0]) || m.source;
+  const tag = (m.tags && m.tags[0]) || "Tools";
   (groups[tag] ||= []).push(name);
 }
+const ORDER = [...Object.keys(DEVICON_CATS), "Generic", "Social"];
 const aliasLines = Object.entries(manifest).filter(([, m]) => m.alias).map(([a, m]) => `\`${a}\`→\`${m.alias}\``);
 let md = `# Icon names (use as \`"icon": "<name>"\`)
 
@@ -152,9 +145,11 @@ Bundled, offline. Add any other devicon tech with \`node icons/build.mjs --add <
 (full list: https://devicon.dev). Generic shapes and social marks below are not brand logos.
 
 `;
-for (const [tag, names] of Object.entries(groups).sort()) {
+for (const tag of ORDER) {
+  const names = groups[tag];
+  if (!names) continue;
   md += `**${tag}** — ${names.sort().map((n) => `\`${n}\``).join(", ")}\n\n`;
 }
-md += `**aliases** — ${aliasLines.sort().join(", ")}\n`;
+md += `**Aliases** — ${aliasLines.sort().join(", ")}\n`;
 writeFileSync(`${REFS}/icons.md`, md);
 console.log("wrote references/icons.md");

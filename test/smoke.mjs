@@ -42,4 +42,13 @@ await smoke("json", buildHtml({
   }));
 }
 
+// Round-trip: load a saved .excalidraw scene as-is (full elements + files)
+{
+  const scene = JSON.parse(readFileSync(here("./sample-scene.excalidraw"), "utf8"));
+  await smoke("scene", buildHtml({
+    template, title: "smoke-scene", style, mode: "scene",
+    elements: scene.elements || [], files: scene.files || {},
+  }));
+}
+
 console.log("SMOKE OK");

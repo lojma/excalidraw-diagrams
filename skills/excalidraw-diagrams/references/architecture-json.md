@@ -32,9 +32,9 @@ off. `x`/`y` is an element's top-left corner; arrow `points` are relative to its
   between the frame top and the first child** so the title has its own space. Draw frames
   before the nodes they contain.
 
-- **`icon: "<name>"`** on a node → embeds a real SVG icon at the node's left.
-  When a node has an icon, **make it wider** (`label width + ~80px`) so the centered label
-  clears the icon. Names are tech/stack logos (devicon) + generic shapes + social marks —
+- **`icon: "<name>"`** on a node → embeds a real SVG icon at the node's left. The renderer
+  auto-widens an icon'd node so its centered label clears the glyph (set a larger `width`
+  yourself if you want more room). Names are tech/stack logos (devicon) + generic shapes + social marks —
   full list in `references/icons.md`. Examples: `react nodejs python go rust docker
   kubernetes postgres mysql mongodb redis kafka nginx aws gcp terraform github`; generics
   `server database gateway shield cloud queue cache user bell`; social `apple google facebook`.

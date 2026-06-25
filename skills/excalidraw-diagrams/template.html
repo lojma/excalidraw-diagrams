@@ -61,19 +61,25 @@
     try { await document.fonts.ready; } catch {}
 
     const Ex = window.ExcalidrawLib;
-    let skeleton, files = {};
-    if (MODE === "json") {
-      skeleton = ELEMENTS; files = FILES || {};
+    let els, files = {};
+    if (MODE === "scene") {
+      // A saved .excalidraw scene: full elements, already laid out and styled — load as-is.
+      els = ELEMENTS; files = FILES || {};
     } else {
-      const { parseMermaidToExcalidraw } = await import("https://esm.sh/@excalidraw/mermaid-to-excalidraw@1.1.2");
-      const r = await parseMermaidToExcalidraw(MERMAID, { fontSize: STYLE.fontSize ?? 18 });
-      skeleton = r.elements; files = r.files || {};
+      let skeleton;
+      if (MODE === "json") {
+        skeleton = ELEMENTS; files = FILES || {};
+      } else {
+        const { parseMermaidToExcalidraw } = await import("https://esm.sh/@excalidraw/mermaid-to-excalidraw@1.1.2");
+        const r = await parseMermaidToExcalidraw(MERMAID, { fontSize: STYLE.fontSize ?? 18 });
+        skeleton = r.elements; files = r.files || {};
+      }
+      // Convert skeleton nodes, then append raw image elements (icons) on top.
+      els = Ex.convertToExcalidrawElements(skeleton).concat(IMAGES || []);
+      applyStyle(els, STYLE);
     }
     const now = Date.now();
     for (const f of Object.values(files)) { f.created = now; f.lastRetrieved = now; }
-    // Convert skeleton nodes, then append raw image elements (icons) on top.
-    const els = Ex.convertToExcalidrawElements(skeleton).concat(IMAGES || []);
-    applyStyle(els, STYLE);
 
     let api = null;
     const App = () => window.React.createElement(Ex.Excalidraw, {
@@ -89,7 +95,12 @@
         // Zoom to fit the whole diagram so the live preview AND the self-review
         // screenshot show every node, not just the top viewport.
         requestAnimationFrame(() => {
-          try { api.scrollToContent(els, { fitToContent: true, animate: false }); } catch {}
+          try {
+            api.scrollToContent(els, { fitToContent: true, animate: false });
+            // Nudge the scene down so the top row clears the fixed toolbar.
+            const st = api.getAppState();
+            api.updateScene({ appState: { scrollY: st.scrollY + 70 } });
+          } catch {}
         });
       },
     });

@@ -2,7 +2,8 @@
 import { existsSync, realpathSync } from "node:fs";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
-import { fileURLToPath } from "node:url";
+import { resolve } from "node:path";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const pexec = promisify(execFile);
 
@@ -25,7 +26,8 @@ const BASE_FLAGS = ["--headless=new", "--disable-gpu", "--no-sandbox", "--hide-s
 
 export async function screenshot({ htmlPath, outPng, budgetMs = 25000, windowSize = "1200,820" }) {
   const chrome = findChrome();
-  const url = htmlPath.startsWith("http") ? htmlPath : `file://${htmlPath}`;
+  // Accept relative paths: file:// needs an absolute path or the page won't load.
+  const url = htmlPath.startsWith("http") ? htmlPath : pathToFileURL(resolve(htmlPath)).href;
 
   // 1) Dump DOM to assert success signal + canvas count.
   const { stdout: dom } = await pexec(chrome, [

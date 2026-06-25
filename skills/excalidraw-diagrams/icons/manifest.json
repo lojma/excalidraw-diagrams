@@ -4,8 +4,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "programming",
-      "language"
+      "Languages"
     ]
   },
   "typescript": {
@@ -13,10 +12,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "programming",
-      "transpiler",
-      "javascript",
-      "language"
+      "Languages"
     ]
   },
   "python": {
@@ -24,8 +20,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "programming",
-      "language"
+      "Languages"
     ]
   },
   "java": {
@@ -33,9 +28,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "programming",
-      "language",
-      "jvm"
+      "Languages"
     ]
   },
   "kotlin": {
@@ -43,9 +36,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "language",
-      "jetbrains",
-      "jvm"
+      "Languages"
     ]
   },
   "swift": {
@@ -53,7 +44,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "language"
+      "Languages"
     ]
   },
   "go": {
@@ -61,7 +52,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "language"
+      "Languages"
     ]
   },
   "rust": {
@@ -69,8 +60,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "programming",
-      "language"
+      "Languages"
     ]
   },
   "ruby": {
@@ -78,8 +68,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "programming",
-      "language"
+      "Languages"
     ]
   },
   "php": {
@@ -87,8 +76,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "programming",
-      "language"
+      "Languages"
     ]
   },
   "csharp": {
@@ -96,7 +84,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "language"
+      "Languages"
     ]
   },
   "cplusplus": {
@@ -104,7 +92,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "language"
+      "Languages"
     ]
   },
   "c": {
@@ -112,7 +100,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "language"
+      "Languages"
     ]
   },
   "dart": {
@@ -120,8 +108,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "programming",
-      "language"
+      "Languages"
     ]
   },
   "scala": {
@@ -129,9 +116,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "programming",
-      "language",
-      "jvm"
+      "Languages"
     ]
   },
   "elixir": {
@@ -139,7 +124,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "language"
+      "Languages"
     ]
   },
   "lua": {
@@ -147,13 +132,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "programming",
-      "language",
-      "object-oriented",
-      "scripting",
-      "procedural",
-      "prototype-based",
-      "functional"
+      "Languages"
     ]
   },
   "bash": {
@@ -161,9 +140,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "shell",
-      "command",
-      "scripting"
+      "Languages"
     ]
   },
   "react": {
@@ -171,7 +148,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "framework"
+      "Frontend"
     ]
   },
   "vuejs": {
@@ -179,7 +156,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "framework"
+      "Frontend"
     ]
   },
   "angular": {
@@ -187,8 +164,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "framework",
-      "javascript"
+      "Frontend"
     ]
   },
   "svelte": {
@@ -196,9 +172,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "javascript",
-      "framework",
-      "compiler"
+      "Frontend"
     ]
   },
   "nextjs": {
@@ -206,7 +180,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "framework"
+      "Frontend"
     ]
   },
   "nuxtjs": {
@@ -214,11 +188,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "js",
-      "javascript",
-      "framework",
-      "frontend",
-      "vuejs"
+      "Frontend"
     ]
   },
   "tailwindcss": {
@@ -226,8 +196,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "css",
-      "framework"
+      "Frontend"
     ]
   },
   "bootstrap": {
@@ -235,11 +204,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "css",
-      "framework",
-      "html",
-      "javascript",
-      "library"
+      "Frontend"
     ]
   },
   "html5": {
@@ -247,8 +212,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "programming",
-      "language"
+      "Frontend"
     ]
   },
   "css3": {
@@ -256,8 +220,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "language",
-      "programming"
+      "Frontend"
     ]
   },
   "redux": {
@@ -265,7 +228,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "framework"
+      "Frontend"
     ]
   },
   "threejs": {
@@ -273,8 +236,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "javascript",
-      "framework"
+      "Frontend"
     ]
   },
   "nodejs": {
@@ -282,8 +244,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "javascript",
-      "language"
+      "Backend"
     ]
   },
   "express": {
@@ -291,7 +252,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "framework"
+      "Backend"
     ]
   },
   "nestjs": {
@@ -299,22 +260,23 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "framework"
+      "Backend"
     ]
   },
   "django": {
     "file": "django.svg",
     "source": "devicon",
     "license": "MIT",
-    "tags": []
+    "tags": [
+      "Backend"
+    ]
   },
   "flask": {
     "file": "flask.svg",
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "python",
-      "framework"
+      "Backend"
     ]
   },
   "fastapi": {
@@ -322,8 +284,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "python",
-      "framework"
+      "Backend"
     ]
   },
   "spring": {
@@ -331,7 +292,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "framework"
+      "Backend"
     ]
   },
   "rails": {
@@ -339,7 +300,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "framework"
+      "Backend"
     ]
   },
   "laravel": {
@@ -347,8 +308,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "php",
-      "framework"
+      "Backend"
     ]
   },
   "dotnetcore": {
@@ -356,7 +316,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "framework"
+      "Backend"
     ]
   },
   "graphql": {
@@ -364,9 +324,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "language",
-      "data",
-      "query"
+      "Backend"
     ]
   },
   "flutter": {
@@ -374,8 +332,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "framework",
-      "sdk"
+      "Mobile"
     ]
   },
   "android": {
@@ -383,8 +340,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "os",
-      "mobile"
+      "Mobile"
     ]
   },
   "postgresql": {
@@ -392,7 +348,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "database"
+      "Databases"
     ]
   },
   "mysql": {
@@ -400,8 +356,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "database",
-      "language"
+      "Databases"
     ]
   },
   "mongodb": {
@@ -409,7 +364,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "database"
+      "Databases"
     ]
   },
   "redis": {
@@ -417,7 +372,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "server"
+      "Databases"
     ]
   },
   "sqlite": {
@@ -425,9 +380,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "sql",
-      "database",
-      "db"
+      "Databases"
     ]
   },
   "mariadb": {
@@ -435,9 +388,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "database",
-      "sql",
-      "open-source"
+      "Databases"
     ]
   },
   "cassandra": {
@@ -445,9 +396,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "nosql",
-      "database",
-      "open-source"
+      "Databases"
     ]
   },
   "elasticsearch": {
@@ -455,9 +404,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "elastic",
-      "data",
-      "logs"
+      "Databases"
     ]
   },
   "neo4j": {
@@ -465,7 +412,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "database"
+      "Databases"
     ]
   },
   "rabbitmq": {
@@ -473,8 +420,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "message-broker",
-      "open-source"
+      "Messaging"
     ]
   },
   "apachekafka": {
@@ -482,8 +428,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "streaming",
-      "open-source"
+      "Messaging"
     ]
   },
   "amazonwebservices": {
@@ -491,9 +436,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "cloud",
-      "hosting",
-      "server"
+      "Cloud"
     ]
   },
   "googlecloud": {
@@ -501,8 +444,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "google",
-      "cloud"
+      "Cloud"
     ]
   },
   "azure": {
@@ -510,8 +452,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "cloud",
-      "devops"
+      "Cloud"
     ]
   },
   "digitalocean": {
@@ -519,10 +460,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "cloud",
-      "hosting",
-      "database",
-      "storage"
+      "Cloud"
     ]
   },
   "heroku": {
@@ -530,7 +468,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "cloud"
+      "Cloud"
     ]
   },
   "vercel": {
@@ -538,10 +476,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "hosting",
-      "platform",
-      "deployment",
-      "git"
+      "Cloud"
     ]
   },
   "cloudflare": {
@@ -549,11 +484,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "web",
-      "cdn",
-      "dns",
-      "proxy",
-      "security"
+      "Cloud"
     ]
   },
   "docker": {
@@ -561,8 +492,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "platform",
-      "deploy"
+      "DevOps"
     ]
   },
   "kubernetes": {
@@ -570,8 +500,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "container",
-      "deployment"
+      "DevOps"
     ]
   },
   "terraform": {
@@ -579,9 +508,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "deployment",
-      "architecture",
-      "automation"
+      "DevOps"
     ]
   },
   "ansible": {
@@ -589,10 +516,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "automation",
-      "provisioning",
-      "deployment",
-      "continuous-delivery"
+      "DevOps"
     ]
   },
   "jenkins": {
@@ -600,9 +524,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "platform",
-      "integration",
-      "server"
+      "DevOps"
     ]
   },
   "nginx": {
@@ -610,7 +532,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "server"
+      "DevOps"
     ]
   },
   "apache": {
@@ -618,7 +540,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "php"
+      "DevOps"
     ]
   },
   "grafana": {
@@ -626,12 +548,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "monitoring",
-      "analytics",
-      "metrics",
-      "logs",
-      "visualization",
-      "web-application"
+      "DevOps"
     ]
   },
   "prometheus": {
@@ -639,9 +556,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "monitoring",
-      "observability",
-      "analysis"
+      "DevOps"
     ]
   },
   "git": {
@@ -649,7 +564,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "version-control"
+      "Tools"
     ]
   },
   "github": {
@@ -657,7 +572,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "version-control"
+      "Tools"
     ]
   },
   "gitlab": {
@@ -665,7 +580,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "version-control"
+      "Tools"
     ]
   },
   "bitbucket": {
@@ -673,7 +588,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "version-control"
+      "Tools"
     ]
   },
   "figma": {
@@ -681,7 +596,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "design"
+      "Tools"
     ]
   },
   "postman": {
@@ -689,8 +604,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "tool",
-      "testing"
+      "Tools"
     ]
   },
   "vscode": {
@@ -698,8 +612,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "editor",
-      "ide"
+      "Tools"
     ]
   },
   "linux": {
@@ -707,7 +620,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "os"
+      "OS"
     ]
   },
   "ubuntu": {
@@ -715,9 +628,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "os",
-      "open-source",
-      "linux"
+      "OS"
     ]
   },
   "debian": {
@@ -725,8 +636,7 @@
     "source": "devicon",
     "license": "MIT",
     "tags": [
-      "os",
-      "server"
+      "OS"
     ]
   },
   "server": {
@@ -734,7 +644,7 @@
     "source": "lucide",
     "license": "ISC",
     "tags": [
-      "generic"
+      "Generic"
     ]
   },
   "database": {
@@ -742,7 +652,7 @@
     "source": "lucide",
     "license": "ISC",
     "tags": [
-      "generic"
+      "Generic"
     ]
   },
   "mobile": {
@@ -750,7 +660,7 @@
     "source": "lucide",
     "license": "ISC",
     "tags": [
-      "generic"
+      "Generic"
     ]
   },
   "web": {
@@ -758,7 +668,7 @@
     "source": "lucide",
     "license": "ISC",
     "tags": [
-      "generic"
+      "Generic"
     ]
   },
   "shield": {
@@ -766,7 +676,7 @@
     "source": "lucide",
     "license": "ISC",
     "tags": [
-      "generic"
+      "Generic"
     ]
   },
   "key": {
@@ -774,7 +684,7 @@
     "source": "lucide",
     "license": "ISC",
     "tags": [
-      "generic"
+      "Generic"
     ]
   },
   "gateway": {
@@ -782,7 +692,7 @@
     "source": "lucide",
     "license": "ISC",
     "tags": [
-      "generic"
+      "Generic"
     ]
   },
   "queue": {
@@ -790,7 +700,7 @@
     "source": "lucide",
     "license": "ISC",
     "tags": [
-      "generic"
+      "Generic"
     ]
   },
   "cloud": {
@@ -798,7 +708,7 @@
     "source": "lucide",
     "license": "ISC",
     "tags": [
-      "generic"
+      "Generic"
     ]
   },
   "globe": {
@@ -806,7 +716,7 @@
     "source": "lucide",
     "license": "ISC",
     "tags": [
-      "generic"
+      "Generic"
     ]
   },
   "user": {
@@ -814,7 +724,7 @@
     "source": "lucide",
     "license": "ISC",
     "tags": [
-      "generic"
+      "Generic"
     ]
   },
   "bell": {
@@ -822,7 +732,7 @@
     "source": "lucide",
     "license": "ISC",
     "tags": [
-      "generic"
+      "Generic"
     ]
   },
   "cache": {
@@ -830,7 +740,7 @@
     "source": "lucide",
     "license": "ISC",
     "tags": [
-      "generic"
+      "Generic"
     ]
   },
   "lock": {
@@ -838,7 +748,7 @@
     "source": "lucide",
     "license": "ISC",
     "tags": [
-      "generic"
+      "Generic"
     ]
   },
   "api": {
@@ -846,7 +756,7 @@
     "source": "lucide",
     "license": "ISC",
     "tags": [
-      "generic"
+      "Generic"
     ]
   },
   "apple": {
@@ -854,7 +764,7 @@
     "source": "simple-icons",
     "license": "CC0-1.0",
     "tags": [
-      "social"
+      "Social"
     ]
   },
   "google": {
@@ -862,7 +772,7 @@
     "source": "simple-icons",
     "license": "CC0-1.0",
     "tags": [
-      "social"
+      "Social"
     ]
   },
   "facebook": {
@@ -870,7 +780,7 @@
     "source": "simple-icons",
     "license": "CC0-1.0",
     "tags": [
-      "social"
+      "Social"
     ]
   },
   "js": {

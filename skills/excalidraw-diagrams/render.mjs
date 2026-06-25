@@ -97,6 +97,12 @@ export function expandSemantic(elements, { color = true } = {}) {
       else {
         const fileId = `icon-${icon}`;
         if (!files[fileId]) files[fileId] = { mimeType: "image/svg+xml", id: fileId, dataURL, created: 1 };
+        // Ensure the node is wide enough that the centered label clears the left icon.
+        const label = node.label && node.label.text;
+        if (label) {
+          const need = label.length * 11 + 92;
+          if (!node.width || node.width < need) node.width = need;
+        }
         const h = node.height ?? 56, size = 26;
         images.push(imageElement(`img-${n++}`, (node.x ?? 0) + 12, (node.y ?? 0) + h / 2 - size / 2, size, fileId));
       }
@@ -130,6 +136,7 @@ function parseArgs(argv) {
     else if (a === "--serve") { args.serve = true; args.open = false; }
     else if (a === "--title") args.title = argv[++i];
     else if (a === "--from-json") args.fromJson = argv[++i];
+    else if (a === "--from-excalidraw") args.fromExcalidraw = argv[++i];
     else if (a === "--out") args.out = argv[++i];
     else if (a === "--style") args.style = argv[++i];
     else if (a === "--no-color") args.noColor = true;
@@ -160,7 +167,14 @@ export async function main(argv) {
   const template = readFileSync(join(HERE, "template.html"), "utf8");
 
   let mode = "mermaid", mermaid = "", elements = [], images = [], files = {};
-  if (args.fromJson) {
+  if (args.fromExcalidraw) {
+    // Round-trip: a saved .excalidraw scene (full elements + files) — load as-is so
+    // the user's manual edits are preserved, then improve/re-render.
+    mode = "scene";
+    const scene = JSON.parse(readFileSync(args.fromExcalidraw, "utf8"));
+    elements = scene.elements || [];
+    files = scene.files || {};
+  } else if (args.fromJson) {
     // Hand-authored architecture maps: an Excalidraw skeleton-element array, with
     // author-friendly role/frame/icon fields expanded into colors + embedded icons.
     mode = "json";

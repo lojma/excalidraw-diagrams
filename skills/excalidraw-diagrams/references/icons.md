@@ -3,70 +3,28 @@
 Bundled, offline. Add any other devicon tech with `node icons/build.mjs --add <slug>`
 (full list: https://devicon.dev). Generic shapes and social marks below are not brand logos.
 
-**automation** — `ansible`
+**Languages** — `bash`, `c`, `cplusplus`, `csharp`, `dart`, `elixir`, `go`, `java`, `javascript`, `kotlin`, `lua`, `php`, `python`, `ruby`, `rust`, `scala`, `swift`, `typescript`
 
-**cloud** — `amazonwebservices`, `azure`, `digitalocean`, `heroku`
+**Frontend** — `angular`, `bootstrap`, `css3`, `html5`, `nextjs`, `nuxtjs`, `react`, `redux`, `svelte`, `tailwindcss`, `threejs`, `vuejs`
 
-**container** — `kubernetes`
+**Backend** — `django`, `dotnetcore`, `express`, `fastapi`, `flask`, `graphql`, `laravel`, `nestjs`, `nodejs`, `rails`, `spring`
 
-**css** — `bootstrap`, `tailwindcss`
+**Mobile** — `android`, `flutter`
 
-**database** — `mariadb`, `mongodb`, `mysql`, `neo4j`, `postgresql`
+**Databases** — `cassandra`, `elasticsearch`, `mariadb`, `mongodb`, `mysql`, `neo4j`, `postgresql`, `redis`, `sqlite`
 
-**deployment** — `terraform`
+**Messaging** — `apachekafka`, `rabbitmq`
 
-**design** — `figma`
+**Cloud** — `amazonwebservices`, `azure`, `cloudflare`, `digitalocean`, `googlecloud`, `heroku`, `vercel`
 
-**devicon** — `django`
+**DevOps** — `ansible`, `apache`, `docker`, `grafana`, `jenkins`, `kubernetes`, `nginx`, `prometheus`, `terraform`
 
-**editor** — `vscode`
+**Tools** — `bitbucket`, `figma`, `git`, `github`, `gitlab`, `postman`, `vscode`
 
-**elastic** — `elasticsearch`
+**OS** — `debian`, `linux`, `ubuntu`
 
-**framework** — `angular`, `dotnetcore`, `express`, `flutter`, `nestjs`, `nextjs`, `rails`, `react`, `redux`, `spring`, `vuejs`
+**Generic** — `api`, `bell`, `cache`, `cloud`, `database`, `gateway`, `globe`, `key`, `lock`, `mobile`, `queue`, `server`, `shield`, `user`, `web`
 
-**generic** — `api`, `bell`, `cache`, `cloud`, `database`, `gateway`, `globe`, `key`, `lock`, `mobile`, `queue`, `server`, `shield`, `user`, `web`
+**Social** — `apple`, `facebook`, `google`
 
-**google** — `googlecloud`
-
-**hosting** — `vercel`
-
-**javascript** — `nodejs`, `svelte`, `threejs`
-
-**js** — `nuxtjs`
-
-**language** — `c`, `cplusplus`, `csharp`, `css3`, `elixir`, `go`, `graphql`, `kotlin`, `swift`
-
-**message-broker** — `rabbitmq`
-
-**monitoring** — `grafana`, `prometheus`
-
-**nosql** — `cassandra`
-
-**os** — `android`, `debian`, `linux`, `ubuntu`
-
-**php** — `apache`, `laravel`
-
-**platform** — `docker`, `jenkins`
-
-**programming** — `dart`, `html5`, `java`, `javascript`, `lua`, `php`, `python`, `ruby`, `rust`, `scala`, `typescript`
-
-**python** — `fastapi`, `flask`
-
-**server** — `nginx`, `redis`
-
-**shell** — `bash`
-
-**social** — `apple`, `facebook`, `google`
-
-**sql** — `sqlite`
-
-**streaming** — `apachekafka`
-
-**tool** — `postman`
-
-**version-control** — `bitbucket`, `git`, `github`, `gitlab`
-
-**web** — `cloudflare`
-
-**aliases** — `aws`→`amazonwebservices`, `dotnet`→`dotnetcore`, `gcp`→`googlecloud`, `golang`→`go`, `js`→`javascript`, `k8s`→`kubernetes`, `kafka`→`apachekafka`, `mongo`→`mongodb`, `next`→`nextjs`, `node`→`nodejs`, `nuxt`→`nuxtjs`, `postgres`→`postgresql`, `py`→`python`, `rn`→`react`, `tailwind`→`tailwindcss`, `ts`→`typescript`, `vue`→`vuejs`
+**Aliases** — `aws`→`amazonwebservices`, `dotnet`→`dotnetcore`, `gcp`→`googlecloud`, `golang`→`go`, `js`→`javascript`, `k8s`→`kubernetes`, `kafka`→`apachekafka`, `mongo`→`mongodb`, `next`→`nextjs`, `node`→`nodejs`, `nuxt`→`nuxtjs`, `postgres`→`postgresql`, `py`→`python`, `rn`→`react`, `tailwind`→`tailwindcss`, `ts`→`typescript`, `vue`→`vuejs`
