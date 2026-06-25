@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>__TITLE__</title>
+<link rel="stylesheet" href="https://unpkg.com/@excalidraw/excalidraw@0.17.6/dist/styles.css" />
+<style>
+  html, body, #app { height: 100%; margin: 0; }
+  #err { position: fixed; top: 0; left: 0; font: 12px monospace; color: #c00; white-space: pre-wrap; z-index: 9999; }
+  #save { position: fixed; top: 10px; right: 12px; z-index: 10000; font: 13px sans-serif;
+          padding: 6px 12px; border: 1px solid #ced4da; border-radius: 6px; background: #fff; cursor: pointer; }
+</style>
+<script>window.EXCALIDRAW_ASSET_PATH = "https://unpkg.com/@excalidraw/excalidraw@0.17.6/dist/";</script>
+<script src="https://unpkg.com/react@18.2.0/umd/react.production.min.js"></script>
+<script src="https://unpkg.com/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://unpkg.com/@excalidraw/excalidraw@0.17.6/dist/excalidraw.production.min.js"></script>
+</head>
+<body>
+<button id="save">💾 Save .excalidraw</button>
+<div id="app"></div>
+<pre id="err"></pre>
+<script type="module">
+  const TITLE = __TITLE__;
+  const MERMAID = __MERMAID__;
+  const STYLE = __STYLE__;
+
+  const fail = (m) => { document.getElementById("err").textContent += m + "\n"; };
+  window.addEventListener("error", (e) => fail("ERROR: " + (e.message || e)));
+  window.addEventListener("unhandledrejection", (e) => fail("REJECTION: " + ((e.reason && e.reason.message) || e.reason)));
+
+  function applyStyle(els, s) {
+    for (const el of els) {
+      if (["rectangle", "diamond", "ellipse"].includes(el.type)) {
+        el.roundness = el.roundness ?? (s.roundness != null ? { type: s.roundness } : { type: 3 });
+        el.fillStyle = s.fillStyle ?? "solid";
+        el.strokeWidth = s.strokeWidth ?? 1.5;
+        if (!el.backgroundColor || el.backgroundColor === "transparent") {
+          el.backgroundColor = s.backgroundColor ?? "#f8f9fa";
+          el.strokeColor = s.strokeColor ?? "#343a40";
+        }
+      }
+      if (el.type === "text" && s.fontFamily) el.fontFamily = s.fontFamily;
+      if (el.type === "arrow") {
+        el.strokeColor = s.arrowColor ?? s.strokeColor ?? "#495057";
+        el.strokeWidth = s.strokeWidth ?? 1.5;
+      }
+    }
+  }
+
+  try {
+    const { parseMermaidToExcalidraw } = await import("https://esm.sh/@excalidraw/mermaid-to-excalidraw@1.1.2");
+    const Ex = window.ExcalidrawLib;
+    const { elements, files } = await parseMermaidToExcalidraw(MERMAID, { fontSize: STYLE.fontSize ?? 18 });
+    const els = Ex.convertToExcalidrawElements(elements);
+    applyStyle(els, STYLE);
+
+    let api = null;
+    const App = () => window.React.createElement(Ex.Excalidraw, {
+      initialData: {
+        elements: els,
+        files,
+        appState: { viewBackgroundColor: STYLE.viewBackgroundColor ?? "#ffffff" },
+        scrollToContent: true,
+      },
+      excalidrawAPI: (a) => { api = a; },
+    });
+    window.ReactDOM.createRoot(document.getElementById("app")).render(window.React.createElement(App));
+
+    document.getElementById("save").addEventListener("click", () => {
+      if (!api) return;
+      const json = Ex.serializeAsJSON(api.getSceneElements(), api.getAppState(), api.getFiles(), "local");
+      const blob = new Blob([json], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = (TITLE || "diagram").replace(/[^a-z0-9-_]+/gi, "-") + ".excalidraw";
+      a.click();
+    });
+
+    document.body.dataset.rendered = "true";
+  } catch (e) {
+    fail("CATCH: " + ((e && e.stack) || e));
+  }
+</script>
+</body>
+</html>
