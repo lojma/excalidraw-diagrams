@@ -1,0 +1,7 @@
+flowchart TD
+  A([User]) --> B{Logged in?}
+  B -- no --> C[Show login form]
+  C --> D[POST /auth]
+  D --> B
+  B -- yes --> E[Dashboard]
+  E --> F[(Postgres)]
