@@ -11,6 +11,12 @@ blocks — no manual coordinates, no arrows-over-blocks).
 
 ## Workflow
 
+> **Script paths:** `render.mjs` and `shot.mjs` live in **this skill's own
+> directory** — the folder you just read this `SKILL.md` from. Your shell's
+> working directory is usually a different project, so invoke them by that
+> absolute path. Below, `$SKILL` stands for that folder (e.g.
+> `~/.claude/skills/excalidraw-diagrams`); substitute the real path.
+
 1. **Classify** the request into a supported Mermaid type:
    | User wants | Mermaid |
    |------------|---------|
@@ -27,23 +33,27 @@ blocks — no manual coordinates, no arrows-over-blocks).
 
 3. **Render it:**
    ```bash
-   node skills/excalidraw-diagrams/render.mjs diagram.mmd --title "Auth flow" --style clean
+   node "$SKILL/render.mjs" diagram.mmd --title "Auth flow" --style clean
    ```
    - `--style` one of `clean` (default), `sketchy`, `colorful`, `mono`.
    - `--style-json '{"strokeColor":"#1862ab","backgroundColor":"#e7f5ff"}'` to override.
    - Default opens your external browser. In an embedded/in-app browser
      environment (sandboxes `file://`), use `--serve` and open the printed
      `http://localhost:PORT` URL instead.
+   - `render.mjs` prints the output HTML path on stdout — capture it for step 4.
    - See the flag list at the top of `render.mjs` if unsure.
 
 4. **Self-review gate (required).** Screenshot the rendered page and look at it:
    ```bash
-   node skills/excalidraw-diagrams/shot.mjs <printed-html-path> --out /tmp/diagram.png
+   node "$SKILL/shot.mjs" <printed-html-path> --out /tmp/diagram.png
    ```
    Then Read `/tmp/diagram.png`. If arrows cross blocks, labels overlap, or the
    layout is cramped: fix the Mermaid (change direction, add subgraphs, split
    the diagram) and re-render. Only tell the user it's ready after it looks
-   right.
+   right. The preview zooms to fit the whole diagram, so the screenshot shows
+   every node. If `shot.mjs` returns `"ok":false` / `"canvasCount":0`, that is
+   usually a slow-CDN flake — just run it once more before concluding anything
+   is wrong.
 
 5. **Tell the user** it's open, and that the **💾 Save .excalidraw** button
    (top-right) downloads an editable file if they want one.
@@ -56,8 +66,8 @@ blocks — no manual coordinates, no arrows-over-blocks).
 - **Group with `subgraph`** for architecture maps — biggest readability win.
 - **Short labels** — a handle, not a sentence.
 - **Split dense diagrams** (>~12 nodes) into overview + detail.
-- For conceptual/teaching diagrams, read
-  `skills/excalidraw-diagrams/references/design-principles.md` first.
+- For conceptual/teaching diagrams, read `$SKILL/references/design-principles.md`
+  first.
 
 ## Example
 

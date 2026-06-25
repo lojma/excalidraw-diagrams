@@ -63,7 +63,14 @@
         appState: { viewBackgroundColor: STYLE.viewBackgroundColor ?? "#ffffff" },
         scrollToContent: true,
       },
-      excalidrawAPI: (a) => { api = a; },
+      excalidrawAPI: (a) => {
+        api = a;
+        // Zoom to fit the whole diagram so the live preview AND the self-review
+        // screenshot show every node, not just the top viewport.
+        requestAnimationFrame(() => {
+          try { api.scrollToContent(els, { fitToContent: true, animate: false }); } catch {}
+        });
+      },
     });
     window.ReactDOM.createRoot(document.getElementById("app")).render(window.React.createElement(App));
 
