@@ -1,5 +1,6 @@
 node_modules/
 *.png
+!docs/images/*.png
 *.log
 .DS_Store
 /tmp-preview/
