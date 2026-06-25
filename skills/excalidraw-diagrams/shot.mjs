@@ -1,7 +1,8 @@
 #!/usr/bin/env node
-import { existsSync } from "node:fs";
+import { existsSync, realpathSync } from "node:fs";
 import { execFile } from "node:child_process";
 import { promisify } from "node:util";
+import { fileURLToPath } from "node:url";
 
 const pexec = promisify(execFile);
 
@@ -45,7 +46,9 @@ export async function screenshot({ htmlPath, outPng, budgetMs = 25000, windowSiz
   return { ok: rendered && canvasCount >= 2, rendered, canvasCount };
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Run as a CLI even when reached through a symlink (installed skill dir).
+const invokedPath = process.argv[1] ? realpathSync(process.argv[1]) : "";
+if (fileURLToPath(import.meta.url) === invokedPath) {
   const [htmlPath, ...rest] = process.argv.slice(2);
   const outIdx = rest.indexOf("--out");
   const outPng = outIdx >= 0 ? rest[outIdx + 1] : undefined;

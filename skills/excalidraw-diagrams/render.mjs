@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { readFileSync, mkdirSync, writeFileSync } from "node:fs";
+import { readFileSync, mkdirSync, writeFileSync, realpathSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
 import { tmpdir } from "node:os";
@@ -91,6 +91,11 @@ export async function main(argv) {
   else if (args.open) openInBrowser(outPath);
 }
 
-if (import.meta.url === `file://${process.argv[1]}`) {
+// Run main() when invoked as a CLI. Resolve symlinks: when installed under
+// ~/.claude/skills the script is reached via a symlink, so process.argv[1]
+// (symlink path) must be realpath'd to match fileURLToPath(import.meta.url)
+// (the real path ESM already resolved).
+const invokedPath = process.argv[1] ? realpathSync(process.argv[1]) : "";
+if (fileURLToPath(import.meta.url) === invokedPath) {
   main(process.argv.slice(2)).catch((e) => { console.error(e); process.exit(1); });
 }
