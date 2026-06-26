@@ -46,7 +46,10 @@
       }
       if (el.type === "text" && s.fontFamily) el.fontFamily = s.fontFamily;
       if (el.type === "arrow") {
-        el.strokeColor = s.arrowColor ?? s.strokeColor ?? "#495057";
+        // Dashed arrows are "secondary" connectors (external / skip routes): draw them
+        // lighter so they don't dominate the primary solid tier-flow arrows.
+        const secondary = el.strokeStyle === "dashed";
+        el.strokeColor = secondary ? "#adb5bd" : (s.arrowColor ?? s.strokeColor ?? "#495057");
         el.strokeWidth = s.strokeWidth ?? 1.5;
       }
     }

@@ -221,15 +221,19 @@ export function layoutTiers(spec) {
     sy += frameH + G.tierGap;
   }
 
-  const emitArrow = (absPts, label) => {
+  const emitArrow = (absPts, label, style) => {
     const [x, y] = absPts[0];
     const pts = absPts.map(([px, py]) => [px - x, py - y]);
     const last = pts[pts.length - 1];
-    const arr = { type: "arrow", x, y, width: last[0], height: last[1], points: pts, endArrowhead: "arrow" };
+    const arr = { type: "arrow", x, y, width: last[0], height: last[1], points: pts, endArrowhead: "arrow", ...style };
     if (label) arr.label = { text: label, fontSize: 13 };
     edges.push(arr);
   };
-  const busX = stackRight + G.sideGap / 2;   // empty corridor between stack and side groups
+  // Long, secondary connectors (to external side groups, and tier-skipping edges)
+  // are drawn dashed + light so they don't dominate the primary tier flow.
+  const SECONDARY = { strokeStyle: "dashed" };
+  const busX = stackRight + G.sideGap - 28;   // corridor kept close to the side groups
+  const belowFrame = (n) => (n.tier != null ? tierSpan[n.tier].bottom : n.y + n.h) + 24;
 
   // Every adjacent down-edge routes as an orthogonal elbow: it drops from a
   // distributed exit on its source face to its own horizontal lane in the gap,
@@ -260,18 +264,18 @@ export function layoutTiers(spec) {
     const a = box[e.from], b = box[e.to];
     if (!a || !b) { console.error(`warning: edge ${e.from}->${e.to} references an unknown node`); continue; }
     if (sideIds.has(e.to)) {
-      // To a side group: drop into the gap below the source, run out to the corridor,
+      // To a side group: drop CLEAR of the source's frame, run out to the corridor,
       // then up/down to the target — never slicing across tiers or same-row neighbors.
-      const gapY = a.y + a.h + G.tierGap / 2;
-      emitArrow([[a.cx, a.y + a.h + 4], [a.cx, gapY], [busX, gapY], [busX, b.cy], [b.x - 6, b.cy]], e.label);
+      const gapY = belowFrame(a);
+      emitArrow([[a.cx, a.y + a.h + 4], [a.cx, gapY], [busX, gapY], [busX, b.cy], [b.x - 6, b.cy]], e.label, SECONDARY);
     } else if (sideIds.has(e.from)) {
       const gapY = b.y - G.tierGap / 2;
-      emitArrow([[a.x - 4, a.cy], [busX, a.cy], [busX, gapY], [b.cx, gapY], [b.cx, b.y - 6]], e.label);
+      emitArrow([[a.x - 4, a.cy], [busX, a.cy], [busX, gapY], [b.cx, gapY], [b.cx, b.y - 6]], e.label, SECONDARY);
     } else if (a.tier != null && b.tier != null && Math.abs(b.tier - a.tier) >= 2) {
       // Skip-tier: route around the left margin so the edge never crosses an
       // intermediate frame. Each skip edge gets its own lane to avoid overlap.
       const laneX = leftBusX - skipLane++ * 16;
-      emitArrow([[a.x - 4, a.cy], [laneX, a.cy], [laneX, b.cy], [b.x - 6, b.cy]], e.label);
+      emitArrow([[a.x - 4, a.cy], [laneX, a.cy], [laneX, b.cy], [b.x - 6, b.cy]], e.label, SECONDARY);
     } else if (ortho.has(e)) {
       const { sx, tx, laneY, label } = ortho.get(e);
       emitArrow([[sx, a.y + a.h + 4], [sx, laneY], [tx, laneY], [tx, b.y - 6]], label);

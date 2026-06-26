@@ -152,6 +152,15 @@ test("layoutTiers stacks tiers vertically and centers their frames", () => {
   assert.ok(Math.abs(cClient - cBackend) < 1, "main frames share a center axis");
 });
 
+test("layoutTiers styles side-group and skip edges as secondary (dashed), primary solid", () => {
+  const side = layoutTiers(TIERS).filter((e) => e.type === "arrow").find((a) => a.label && a.label.text === "pay");
+  const primary = layoutTiers(TIERS).filter((e) => e.type === "arrow").find((a) => !a.label); // c -> gw
+  assert.equal(side.strokeStyle, "dashed", "side-group edge is dashed");
+  assert.notEqual(primary.strokeStyle, "dashed", "primary tier-flow edge stays solid");
+  const skip = layoutTiers(SKIP).filter((e) => e.type === "arrow").find((a) => a.label && a.label.text === "direct");
+  assert.equal(skip.strokeStyle, "dashed", "skip-tier edge is dashed");
+});
+
 test("layoutTiers places side groups to the right of the main stack", () => {
   const frames = layoutTiers(TIERS).filter((e) => e.frame);
   const side = frames[2];
