@@ -23,6 +23,8 @@ Bundled, offline. Add any other devicon tech with `node icons/build.mjs --add <s
 
 **OS** — `debian`, `linux`, `ubuntu`
 
+**Services** — `openai`, `paypal`, `sendgrid`, `stripe`, `twilio`
+
 **Generic** — `api`, `bell`, `cache`, `cloud`, `database`, `gateway`, `globe`, `key`, `lock`, `mobile`, `queue`, `server`, `shield`, `user`, `web`
 
 **Social** — `apple`, `facebook`, `google`
