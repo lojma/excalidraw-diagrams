@@ -70,6 +70,22 @@ An object (not an array) with `tiers`, optional `sideGroups`, and `edges`:
 | tier | `columns` | wrap the tier's nodes into a grid of N columns |
 | top  | `layoutOptions` | `{ nodeGap, tierGap, sideGap, padX, titleBand }` spacing |
 
+## Order nodes to avoid crossings
+
+The renderer keeps the node order **you give**; it does not reorder to untangle
+edges. So order each tier's nodes to line up with what they connect to:
+
+- **Put a node near the source that points to it.** If a left-hand source connects
+  to a node, place that node toward the left of its tier; a right-hand source's
+  targets go right. Crossings appear when an edge must travel sideways past other
+  nodes to reach one parked on the far side.
+- **Keep one source's targets together.** List the nodes a single source feeds as
+  neighbors, in the order their siblings appear above.
+
+Example: a left-side `Stickers` feature that uses `Data` and `Wallet` reads cleanly
+when `Data` and `Wallet` sit together at the left of the services tier — not with
+`Wallet` pushed to the far right, which drags its edge across the whole tier.
+
 ## Labels
 
 Keep edge labels sparse. Many labels in the same band (e.g. several edges into one
