@@ -49,6 +49,8 @@ An object (not an array) with `tiers`, optional `sideGroups`, and `edges`:
   below its row and routes across so it doesn't cut through neighbors.
 - An edge that **skips a tier** (e.g. tier 1 → tier 3) auto-routes around the left
   margin instead of slicing through the frame in between.
+- When **many nodes in one tier point to many in the next**, those edges route as
+  parallel orthogonal lanes through a widened gap (instead of a diagonal tangle).
 - Several edges converging on one node fan across its face and a label they all
   share is shown once, not repeated.
 - `role` colors: `client` violet, `service` blue, `data` green, `external` orange.
@@ -74,8 +76,8 @@ edge needs no "charge" label. A label shared by a whole converging bundle is sho
 
 ## When the layout isn't perfect
 
-Straight edges can still cross when many nodes in one tier point to many in the next.
-Two escape hatches:
+Dense gaps route as orthogonal lanes, but lanes can still get busy and individual
+edges may cross a lane. Two escape hatches:
 - **Drag-refine:** open the diagram, drag nodes, click 💾 Save .excalidraw, then
   `render.mjs --from-excalidraw saved.excalidraw` to keep editing.
 - **Full control:** drop to the manual skeleton path (`references/architecture-json.md`),

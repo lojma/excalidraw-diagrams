@@ -202,6 +202,37 @@ test("layoutTiers routes a skip-tier edge around the stack, not through it", () 
   assert.equal(adjacent.points.length, 2, "an adjacent edge stays a straight 2-point arrow");
 });
 
+const MM = {
+  tiers: [
+    { label: "Svc", role: "service", nodes: [{ id: "s1", label: "S1" }, { id: "s2", label: "S2" }] },
+    { label: "Data", role: "data", nodes: [{ id: "d1", label: "D1" }, { id: "d2", label: "D2" }] },
+  ],
+  edges: [{ from: "s1", to: "d2" }, { from: "s2", to: "d1" }, { from: "s1", to: "d1" }, { from: "s2", to: "d2" }],
+};
+
+test("layoutTiers routes a many-to-many gap with distinct orthogonal lanes", () => {
+  const arrows = layoutTiers(MM).filter((e) => e.type === "arrow");
+  assert.equal(arrows.length, 4);
+  for (const ar of arrows) {
+    assert.equal(ar.points.length, 4, "orthogonal 4-point route");
+    assert.equal(ar.points[1][1], ar.points[2][1], "middle segment is a flat horizontal lane");
+  }
+  const laneYs = arrows.map((ar) => Math.round(ar.y + ar.points[1][1]));
+  assert.equal(new Set(laneYs).size, 4, "each edge gets its own lane");
+});
+
+test("layoutTiers leaves a one-to-many gap as straight edges (not lanes)", () => {
+  const spec = {
+    tiers: [
+      { label: "A", role: "service", nodes: [{ id: "a", label: "A" }] },
+      { label: "B", role: "data", nodes: [{ id: "b1", label: "B1" }, { id: "b2", label: "B2" }] },
+    ],
+    edges: [{ from: "a", to: "b1" }, { from: "a", to: "b2" }],
+  };
+  const arrows = layoutTiers(spec).filter((e) => e.type === "arrow");
+  for (const ar of arrows) assert.equal(ar.points.length, 2, "1->many stays straight, not orthogonal");
+});
+
 test("layoutTiers gives two skip-tier edges distinct corridor lanes", () => {
   const spec = {
     tiers: [

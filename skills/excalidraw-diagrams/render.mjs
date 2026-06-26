@@ -159,11 +159,28 @@ export function layoutTiers(spec) {
   const maxFrameW = Math.max(160, ...tiers.map((T) => T.rowWidth)) + 2 * G.padX;
   const centerX = G.x0 + maxFrameW / 2;   // all main frames centered on this axis
 
+  // Pre-scan adjacent down-edges per gap (tier i -> i+1). A gap with >=2 distinct
+  // sources AND >=2 distinct targets is "many-to-many" and routes as orthogonal
+  // lanes; it gets a taller gap so the lanes don't crowd.
+  const tierOf = {};
+  (spec.tiers || []).forEach((t, i) => t.nodes.forEach((n) => { tierOf[n.id] = i; }));
+  const gapEdges = {};
+  for (const e of spec.edges || []) {
+    if (tierOf[e.from] != null && tierOf[e.to] === tierOf[e.from] + 1) (gapEdges[tierOf[e.from]] ||= []).push(e);
+  }
+  const gapMM = {};
+  for (const [i, es] of Object.entries(gapEdges)) {
+    if (new Set(es.map((e) => e.from)).size >= 2 && new Set(es.map((e) => e.to)).size >= 2) gapMM[i] = es.length;
+  }
+  const gapAfter = (ti) => (gapMM[ti] ? Math.max(G.tierGap, gapMM[ti] * 16 + 16) : G.tierGap);
+
+  const tierSpan = [];
   let y = G.y0;
   tiers.forEach((T, ti) => {
     const frameW = T.rowWidth + 2 * G.padX, frameX = centerX - frameW / 2;
     const frameH = G.titleBand + T.blockH + G.padBottom;
     frames.push({ frame: true, role: T.t.role, label: T.t.label, x: frameX, y, width: frameW, height: frameH });
+    tierSpan[ti] = { top: y, bottom: y + frameH };
     const top = y + G.titleBand;
     if (T.grid) {
       T.t.nodes.forEach((node, i) => {
@@ -180,7 +197,7 @@ export function layoutTiers(spec) {
         nx += w + G.nodeGap;
       });
     }
-    y += frameH + G.tierGap;
+    y += frameH + gapAfter(ti);
   });
   const stackRight = centerX + maxFrameW / 2;
 
@@ -206,13 +223,32 @@ export function layoutTiers(spec) {
   };
   const busX = stackRight + G.sideGap / 2;   // empty corridor between stack and side groups
 
+  // Orthogonal lanes for many-to-many gaps: each edge drops from a distributed
+  // exit on its source face to its own horizontal lane in the gap channel, runs
+  // across, then drops into a distributed entry on its target face. Parallel lanes
+  // replace the diagonal tangle that straight edges make when many cross one gap.
+  const spread = (bx, idx, cnt) => bx.x + bx.w * (0.18 + 0.64 * ((idx + 1) / (cnt + 1)));
+  const ortho = new Map();   // edge -> { sx, tx, laneY }
+  for (const i of Object.keys(gapMM)) {
+    const es = gapEdges[i];
+    const channelTop = tierSpan[+i].bottom, channelBot = tierSpan[+i + 1].top;
+    const sx = new Map(), tx = new Map();
+    const groupBy = (key) => es.reduce((g, e) => ((g[e[key]] ||= []).push(e), g), {});
+    for (const [sid, list] of Object.entries(groupBy("from")))
+      list.slice().sort((p, q) => box[p.to].cx - box[q.to].cx).forEach((e, idx) => sx.set(e, spread(box[sid], idx, list.length)));
+    for (const [tid, list] of Object.entries(groupBy("to")))
+      list.slice().sort((p, q) => box[p.from].cx - box[q.from].cx).forEach((e, idx) => tx.set(e, spread(box[tid], idx, list.length)));
+    es.slice().sort((p, q) => (sx.get(p) + tx.get(p)) - (sx.get(q) + tx.get(q)))
+      .forEach((e, idx, ord) => ortho.set(e, { sx: sx.get(e), tx: tx.get(e), laneY: channelTop + (channelBot - channelTop) * ((idx + 1) / (ord.length + 1)) }));
+  }
+
   // Group the vertical edges by the target face they enter so a converging bundle
   // (many sources -> one node) fans across that face instead of piling its
   // arrowheads at the center, and a label shared by the whole bundle shows once.
   const downSibs = {}, upSibs = {};
   for (const e of spec.edges || []) {
     const a = box[e.from], b = box[e.to];
-    if (!a || !b || sideIds.has(e.from) || sideIds.has(e.to)) continue;
+    if (!a || !b || sideIds.has(e.from) || sideIds.has(e.to) || ortho.has(e)) continue;
     // Skip-tier edges enter the target's left face (routed around the stack), so
     // they are not part of any target's top/bottom converging fan.
     if (a.tier != null && b.tier != null && Math.abs(b.tier - a.tier) >= 2) continue;
@@ -253,6 +289,9 @@ export function layoutTiers(spec) {
       // intermediate frame. Each skip edge gets its own lane to avoid overlap.
       const laneX = leftBusX - skipLane++ * 16;
       emitArrow([[a.x - 4, a.cy], [laneX, a.cy], [laneX, b.cy], [b.x - 6, b.cy]], e.label);
+    } else if (ortho.has(e)) {
+      const { sx, tx, laneY } = ortho.get(e);
+      emitArrow([[sx, a.y + a.h + 4], [sx, laneY], [tx, laneY], [tx, b.y - 6]], e.label);
     } else if (b.cy > a.cy + 10) {
       const { tx, label } = faceAttach(e, downSibs);
       emitArrow([[a.cx, a.y + a.h + 4], [tx, b.y - 6]], label);
