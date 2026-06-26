@@ -47,6 +47,15 @@ const SOCIAL = {
   facebook: { slug: "facebook", color: "#1877F2" },
 };
 
+// common SaaS not in devicon (simple-icons slug + brand hex)
+const SERVICES = {
+  stripe: { slug: "stripe", color: "#635BFF" },
+  paypal: { slug: "paypal", color: "#003087" },
+  twilio: { slug: "twilio", color: "#F22F46" },
+  sendgrid: { slug: "sendgrid", color: "#1A82E2" },
+  openai: { slug: "openai", color: "#412991" },
+};
+
 // hand aliases -> canonical name
 const ALIASES = {
   js: "javascript", ts: "typescript", py: "python", golang: "go", node: "nodejs",
@@ -106,6 +115,14 @@ for (const [name, { slug, color }] of Object.entries(SOCIAL)) {
   console.log("simple-icons", name);
 }
 
+for (const [name, { slug, color }] of Object.entries(SERVICES)) {
+  let svg = await fetchText(`https://cdn.jsdelivr.net/npm/simple-icons@latest/icons/${slug}.svg`);
+  svg = svg.replace(/<svg /, `<svg fill="${color}" `);
+  writeFileSync(`${HERE}/${name}.svg`, svg.trim() + "\n");
+  manifest[name] = { file: `${name}.svg`, source: "simple-icons", license: "CC0-1.0", tags: ["Services"] };
+  console.log("simple-icons", name);
+}
+
 // aliases reference existing files
 for (const [alias, target] of Object.entries(ALIASES)) {
   if (manifest[target]) manifest[alias] = { file: manifest[target].file, alias: target };
@@ -137,7 +154,7 @@ for (const [name, m] of Object.entries(manifest)) {
   const tag = (m.tags && m.tags[0]) || "Tools";
   (groups[tag] ||= []).push(name);
 }
-const ORDER = [...Object.keys(DEVICON_CATS), "Generic", "Social"];
+const ORDER = [...Object.keys(DEVICON_CATS), "Services", "Generic", "Social"];
 const aliasLines = Object.entries(manifest).filter(([, m]) => m.alias).map(([a, m]) => `\`${a}\`→\`${m.alias}\``);
 let md = `# Icon names (use as \`"icon": "<name>"\`)
 

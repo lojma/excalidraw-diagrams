@@ -783,6 +783,46 @@
       "Social"
     ]
   },
+  "stripe": {
+    "file": "stripe.svg",
+    "source": "simple-icons",
+    "license": "CC0-1.0",
+    "tags": [
+      "Services"
+    ]
+  },
+  "paypal": {
+    "file": "paypal.svg",
+    "source": "simple-icons",
+    "license": "CC0-1.0",
+    "tags": [
+      "Services"
+    ]
+  },
+  "twilio": {
+    "file": "twilio.svg",
+    "source": "simple-icons",
+    "license": "CC0-1.0",
+    "tags": [
+      "Services"
+    ]
+  },
+  "sendgrid": {
+    "file": "sendgrid.svg",
+    "source": "simple-icons",
+    "license": "CC0-1.0",
+    "tags": [
+      "Services"
+    ]
+  },
+  "openai": {
+    "file": "openai.svg",
+    "source": "simple-icons",
+    "license": "CC0-1.0",
+    "tags": [
+      "Services"
+    ]
+  },
   "js": {
     "file": "javascript.svg",
     "alias": "javascript"
