@@ -47,6 +47,10 @@ An object (not an array) with `tiers`, optional `sideGroups`, and `edges`:
 - `sideGroups` stack to the **right** of the main stack (e.g. external providers).
 - Edges are drawn straight between the nearest faces; an edge to a side group drops
   below its row and routes across so it doesn't cut through neighbors.
+- An edge that **skips a tier** (e.g. tier 1 → tier 3) auto-routes around the left
+  margin instead of slicing through the frame in between.
+- Several edges converging on one node fan across its face and a label they all
+  share is shown once, not repeated.
 - `role` colors: `client` violet, `service` blue, `data` green, `external` orange.
 - Icons: any name from `references/icons.md` (`postgres`, `redis`, `docker`, `react`, …).
 

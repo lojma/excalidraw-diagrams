@@ -179,3 +179,40 @@ test("layoutTiers keeps distinct bundle labels while still fanning the edges", (
   const ends = arrows.map((a) => Math.round(a.x + a.points.at(-1)[0]));
   assert.equal(new Set(ends).size, 3, "edges still fan to distinct attach points");
 });
+
+const SKIP = {
+  tiers: [
+    { label: "T1", role: "client", nodes: [{ id: "a", label: "A" }] },
+    { label: "T2", role: "service", nodes: [{ id: "x", label: "X" }] },
+    { label: "T3", role: "data", nodes: [{ id: "b", label: "B" }] },
+  ],
+  edges: [{ from: "a", to: "b", label: "direct" }, { from: "a", to: "x" }],
+};
+
+test("layoutTiers routes a skip-tier edge around the stack, not through it", () => {
+  const els = layoutTiers(SKIP);
+  const frames = els.filter((e) => e.frame);
+  const leftEdge = Math.min(...frames.map((f) => f.x));
+  const arrows = els.filter((e) => e.type === "arrow");
+  const skip = arrows.find((ar) => ar.label && ar.label.text === "direct");
+  const adjacent = arrows.find((ar) => !ar.label);
+  assert.equal(skip.points.length, 4, "skip edge is an orthogonal 4-point route");
+  const corridorX = skip.x + skip.points[1][0];
+  assert.ok(corridorX < leftEdge, "skip edge routes left of the whole stack");
+  assert.equal(adjacent.points.length, 2, "an adjacent edge stays a straight 2-point arrow");
+});
+
+test("layoutTiers gives two skip-tier edges distinct corridor lanes", () => {
+  const spec = {
+    tiers: [
+      { label: "T1", role: "client", nodes: [{ id: "a1", label: "A1" }, { id: "a2", label: "A2" }] },
+      { label: "T2", role: "service", nodes: [{ id: "x", label: "X" }] },
+      { label: "T3", role: "data", nodes: [{ id: "b", label: "B" }] },
+    ],
+    edges: [{ from: "a1", to: "b" }, { from: "a2", to: "b" }],
+  };
+  const skips = layoutTiers(spec).filter((e) => e.type === "arrow" && e.points.length === 4);
+  assert.equal(skips.length, 2);
+  const lanes = skips.map((s) => s.x + s.points[1][0]);
+  assert.notEqual(lanes[0], lanes[1], "each skip edge gets its own corridor lane");
+});

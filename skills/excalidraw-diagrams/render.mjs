@@ -136,11 +136,11 @@ export function layoutTiers(spec) {
   const box = {}, sideIds = new Set();
   const frames = [], nodes = [], edges = [];
 
-  function place(node, group, x, ny, w, h) {
+  function place(node, group, x, ny, w, h, tier) {
     const px = node.pin?.x ?? x, py = node.pin?.y ?? ny;
     nodes.push({ type: node.shape || "rectangle", role: node.role || group.role, icon: node.icon,
       x: px, y: py, width: w, height: h, label: { text: node.label || node.id } });
-    box[node.id] = { x: px, y: py, w, h, cx: px + w / 2, cy: py + h / 2 };
+    box[node.id] = { x: px, y: py, w, h, cx: px + w / 2, cy: py + h / 2, tier };
   }
 
   // Measure each tier: nodes sized to their OWN text (a `columns` tier uses a uniform
@@ -160,7 +160,7 @@ export function layoutTiers(spec) {
   const centerX = G.x0 + maxFrameW / 2;   // all main frames centered on this axis
 
   let y = G.y0;
-  for (const T of tiers) {
+  tiers.forEach((T, ti) => {
     const frameW = T.rowWidth + 2 * G.padX, frameX = centerX - frameW / 2;
     const frameH = G.titleBand + T.blockH + G.padBottom;
     frames.push({ frame: true, role: T.t.role, label: T.t.label, x: frameX, y, width: frameW, height: frameH });
@@ -170,18 +170,18 @@ export function layoutTiers(spec) {
         const r = Math.floor(i / T.cols), c = i % T.cols;
         const inRow = Math.min(T.cols, T.t.nodes.length - r * T.cols);
         const rw = inRow * T.cw + (inRow - 1) * G.nodeGap;
-        place(node, T.t, centerX - rw / 2 + c * (T.cw + G.nodeGap), top + r * (T.ch + G.nodeGap), T.cw, T.ch);
+        place(node, T.t, centerX - rw / 2 + c * (T.cw + G.nodeGap), top + r * (T.ch + G.nodeGap), T.cw, T.ch, ti);
       });
     } else {
       let nx = frameX + G.padX;
       T.t.nodes.forEach((node, i) => {
         const { w, h } = T.sizes[i];
-        place(node, T.t, nx, top + (T.blockH - h) / 2, w, h);
+        place(node, T.t, nx, top + (T.blockH - h) / 2, w, h, ti);
         nx += w + G.nodeGap;
       });
     }
     y += frameH + G.tierGap;
-  }
+  });
   const stackRight = centerX + maxFrameW / 2;
 
   // side groups: column-stacked, to the right of the main stack
@@ -213,6 +213,9 @@ export function layoutTiers(spec) {
   for (const e of spec.edges || []) {
     const a = box[e.from], b = box[e.to];
     if (!a || !b || sideIds.has(e.from) || sideIds.has(e.to)) continue;
+    // Skip-tier edges enter the target's left face (routed around the stack), so
+    // they are not part of any target's top/bottom converging fan.
+    if (a.tier != null && b.tier != null && Math.abs(b.tier - a.tier) >= 2) continue;
     if (b.cy > a.cy + 10) (downSibs[e.to] ||= []).push(e);
     else if (b.cy < a.cy - 10) (upSibs[e.to] ||= []).push(e);
   }
@@ -232,6 +235,8 @@ export function layoutTiers(spec) {
     return { tx, label };
   }
 
+  const leftBusX = G.x0 - G.sideGap / 2;   // corridor to the left of the main stack
+  let skipLane = 0;
   for (const e of spec.edges || []) {
     const a = box[e.from], b = box[e.to];
     if (!a || !b) { console.error(`warning: edge ${e.from}->${e.to} references an unknown node`); continue; }
@@ -243,6 +248,11 @@ export function layoutTiers(spec) {
     } else if (sideIds.has(e.from)) {
       const gapY = b.y - G.tierGap / 2;
       emitArrow([[a.x - 4, a.cy], [busX, a.cy], [busX, gapY], [b.cx, gapY], [b.cx, b.y - 6]], e.label);
+    } else if (a.tier != null && b.tier != null && Math.abs(b.tier - a.tier) >= 2) {
+      // Skip-tier: route around the left margin so the edge never crosses an
+      // intermediate frame. Each skip edge gets its own lane to avoid overlap.
+      const laneX = leftBusX - skipLane++ * 16;
+      emitArrow([[a.x - 4, a.cy], [laneX, a.cy], [laneX, b.cy], [b.x - 6, b.cy]], e.label);
     } else if (b.cy > a.cy + 10) {
       const { tx, label } = faceAttach(e, downSibs);
       emitArrow([[a.cx, a.y + a.h + 4], [tx, b.y - 6]], label);
