@@ -263,6 +263,23 @@ test("layoutTiers routes a one-to-many gap as orthogonal elbows (no diagonals)",
   }
 });
 
+test("layoutTiers routes a skip edge directly (no perimeter loop) when the target column is clear", () => {
+  const spec = {
+    tiers: [
+      { label: "T1", role: "service", nodes: [{ id: "src", label: "Src" }] },
+      { label: "T2", role: "client", nodes: [{ id: "mid", label: "Mid" }] },
+      { label: "T3", role: "data", nodes: [{ id: "left", label: "Left" }, { id: "c", label: "Center" }, { id: "right", label: "Right" }] },
+    ],
+    edges: [{ from: "src", to: "left", label: "direct" }],
+  };
+  const els = layoutTiers(spec);
+  const leftEdge = Math.min(...els.filter((e) => e.frame).map((f) => f.x));
+  const skip = els.find((e) => e.type === "arrow");
+  const minX = Math.min(...skip.points.map((p) => skip.x + p[0]));
+  assert.ok(minX >= leftEdge - 1, "clear-column skip routes within the stack, not around the left margin");
+  assert.ok(skip.points.at(-1)[1] > 0, "and enters the target from the top (downward)");
+});
+
 test("layoutTiers gives two skip-tier edges distinct corridor lanes", () => {
   const spec = {
     tiers: [

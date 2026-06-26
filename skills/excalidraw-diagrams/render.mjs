@@ -188,7 +188,7 @@ export function layoutTiers(spec) {
     const frameW = T.rowWidth + 2 * G.padX, frameX = centerX - frameW / 2;
     const frameH = G.titleBand + T.blockH + G.padBottom;
     frames.push({ frame: true, role: T.t.role, label: T.t.label, x: frameX, y, width: frameW, height: frameH });
-    tierSpan[ti] = { top: y, bottom: y + frameH };
+    tierSpan[ti] = { top: y, bottom: y + frameH, left: frameX, right: frameX + frameW };
     const top = y + G.titleBand;
     if (T.grid) {
       T.t.nodes.forEach((node, i) => {
@@ -233,7 +233,7 @@ export function layoutTiers(spec) {
   // are drawn dashed + light so they don't dominate the primary tier flow.
   const SECONDARY = { strokeStyle: "dashed" };
   const busX = stackRight + G.sideGap - 28;   // corridor kept close to the side groups
-  const belowFrame = (n) => (n.tier != null ? tierSpan[n.tier].bottom : n.y + n.h) + 24;
+  const belowFrame = (n) => (n.tier != null ? tierSpan[n.tier].bottom : n.y + n.h) + 32;
 
   // Every adjacent down-edge routes as an orthogonal elbow: it drops from a
   // distributed exit on its source face to its own horizontal lane in the gap,
@@ -272,10 +272,25 @@ export function layoutTiers(spec) {
       const gapY = b.y - G.tierGap / 2;
       emitArrow([[a.x - 4, a.cy], [busX, a.cy], [busX, gapY], [b.cx, gapY], [b.cx, b.y - 6]], e.label, SECONDARY);
     } else if (a.tier != null && b.tier != null && Math.abs(b.tier - a.tier) >= 2) {
-      // Skip-tier: route around the left margin so the edge never crosses an
-      // intermediate frame. Each skip edge gets its own lane to avoid overlap.
-      const laneX = leftBusX - skipLane++ * 16;
-      emitArrow([[a.x - 4, a.cy], [laneX, a.cy], [laneX, b.cy], [b.x - 6, b.cy]], e.label, SECONDARY);
+      // Skip-tier. If the target's column is clear of every intermediate frame, drop
+      // a short DIRECT elbow down that column (no perimeter loop). Otherwise route
+      // around the left margin so the edge never slices through a frame.
+      const lo = Math.min(a.tier, b.tier), hi = Math.max(a.tier, b.tier);
+      let clear = true;
+      for (let mi = lo + 1; mi < hi; mi++) {
+        const f = tierSpan[mi];
+        if (f && b.x + b.w >= f.left - 8 && b.x <= f.right + 8) { clear = false; break; }
+      }
+      if (clear) {
+        const gapY = tierSpan[lo].bottom + 18;
+        const pts = b.tier > a.tier
+          ? [[a.cx, a.y + a.h + 4], [a.cx, gapY], [b.cx, gapY], [b.cx, b.y - 6]]
+          : [[a.cx, a.y - 4], [a.cx, gapY], [b.cx, gapY], [b.cx, b.y + b.h + 6]];
+        emitArrow(pts, e.label, SECONDARY);
+      } else {
+        const laneX = leftBusX - skipLane++ * 16;
+        emitArrow([[a.x - 4, a.cy], [laneX, a.cy], [laneX, b.cy], [b.x - 6, b.cy]], e.label, SECONDARY);
+      }
     } else if (ortho.has(e)) {
       const { sx, tx, laneY, label } = ortho.get(e);
       emitArrow([[sx, a.y + a.h + 4], [sx, laneY], [tx, laneY], [tx, b.y - 6]], label);
