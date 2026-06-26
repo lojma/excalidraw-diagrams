@@ -127,12 +127,12 @@ test("layoutTiers emits frames, nodes and arrows from a coordinate-free spec", (
   for (const n of nodes) assert.ok(typeof n.x === "number" && typeof n.y === "number");
 });
 
-test("layoutTiers stacks tiers vertically and aligns their frames", () => {
+test("layoutTiers stacks tiers vertically and centers their frames", () => {
   const frames = layoutTiers(TIERS).filter((e) => e.frame);
   const [client, backend] = frames; // main-stack frames are emitted first, in order
   assert.ok(backend.y > client.y, "tiers stack downward");
-  assert.equal(client.x, backend.x, "main frames share x");
-  assert.equal(client.width, backend.width, "main frames share width");
+  const cClient = client.x + client.width / 2, cBackend = backend.x + backend.width / 2;
+  assert.ok(Math.abs(cClient - cBackend) < 1, "main frames share a center axis");
 });
 
 test("layoutTiers places side groups to the right of the main stack", () => {

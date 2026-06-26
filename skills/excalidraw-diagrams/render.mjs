@@ -126,68 +126,72 @@ function nodeWidth(node) {
   return Math.max(node.width || 0, 120, text * 11 + (node.icon ? 92 : 40));
 }
 
+function nodeHeight(node) { return node.height || (node.shape === "ellipse" ? 96 : 56); }
+
 export function layoutTiers(spec) {
   const G = { x0: 60, y0: 40, nodeGap: 40, tierGap: 60, sideGap: 90,
-    padX: 30, titleBand: 44, padBottom: 24, h: 56, ...(spec.layoutOptions || {}) };
-  const box = {};        // id -> {x,y,w,h,cx,cy}
+    padX: 30, titleBand: 44, padBottom: 24, ...(spec.layoutOptions || {}) };
+  const box = {}, sideIds = new Set();
   const frames = [], nodes = [], edges = [];
 
-  // Uniform cell per tier keeps columns aligned and tidy.
-  const tierCell = (t) => {
-    const w = Math.max(...t.nodes.map(nodeWidth));
-    const h = Math.max(G.h, ...t.nodes.map((n) => n.height || (n.shape === "ellipse" ? 96 : G.h)));
-    return { w, h };
-  };
-  const rowWidth = (n, cellW, cols) => {
-    const c = Math.min(cols || n, n);
-    return c * cellW + (c - 1) * G.nodeGap;
-  };
-
-  // main stack width = widest tier row
-  const cells = (spec.tiers || []).map(tierCell);
-  const contentW = Math.max(120, ...(spec.tiers || []).map((t, i) =>
-    rowWidth(t.nodes.length, cells[i].w, t.columns)));
-  const frameW = contentW + 2 * G.padX;
-
-  let y = G.y0;
-  (spec.tiers || []).forEach((t, ti) => {
-    const cell = cells[ti];
-    const cols = Math.min(t.columns || t.nodes.length, t.nodes.length);
-    const rows = Math.ceil(t.nodes.length / cols);
-    const gridH = rows * cell.h + (rows - 1) * G.nodeGap;
-    const frameH = G.titleBand + gridH + G.padBottom;
-    frames.push({ frame: true, role: t.role, label: t.label, x: G.x0, y, width: frameW, height: frameH });
-    t.nodes.forEach((node, idx) => {
-      const r = Math.floor(idx / cols), c = idx % cols;
-      const inRow = Math.min(cols, t.nodes.length - r * cols);
-      const rw = rowWidth(inRow, cell.w);
-      const left = G.x0 + (frameW - rw) / 2;
-      const nx = left + c * (cell.w + G.nodeGap);
-      const ny = y + G.titleBand + r * (cell.h + G.nodeGap);
-      placeNode(node, t, nx, ny, cell.w, cell.h);
-    });
-    y += frameH + G.tierGap;
-  });
-
-  // side groups: column-stacked, to the right of the main stack
-  let sx = G.x0 + frameW + G.sideGap, sy = G.y0;
-  for (const grp of spec.sideGroups || []) {
-    const cw = Math.max(...grp.nodes.map(nodeWidth));
-    const ch = Math.max(G.h, ...grp.nodes.map((n) => n.height || G.h));
-    const frameH = G.titleBand + grp.nodes.length * ch + (grp.nodes.length - 1) * G.nodeGap + G.padBottom;
-    frames.push({ frame: true, role: grp.role, label: grp.label, x: sx, y: sy, width: cw + 2 * G.padX, height: frameH });
-    grp.nodes.forEach((node, idx) => {
-      placeNode(node, grp, sx + G.padX, sy + G.titleBand + idx * (ch + G.nodeGap), cw, ch);
-    });
-    sy += frameH + G.tierGap;
+  function place(node, group, x, ny, w, h) {
+    const px = node.pin?.x ?? x, py = node.pin?.y ?? ny;
+    nodes.push({ type: node.shape || "rectangle", role: node.role || group.role, icon: node.icon,
+      x: px, y: py, width: w, height: h, label: { text: node.label || node.id } });
+    box[node.id] = { x: px, y: py, w, h, cx: px + w / 2, cy: py + h / 2 };
   }
 
-  function placeNode(node, group, x, ny, w, h) {
-    const width = node.width || w, height = node.height || h;
-    nodes.push({ type: node.shape || "rectangle", role: node.role || group.role, icon: node.icon,
-      x: node.pin?.x ?? x, y: node.pin?.y ?? ny, width, height, label: { text: node.label || node.id } });
-    const bx = node.pin?.x ?? x, by = node.pin?.y ?? ny;
-    box[node.id] = { x: bx, y: by, w: width, h: height, cx: bx + width / 2, cy: by + height / 2 };
+  // Measure each tier: nodes sized to their OWN text (a `columns` tier uses a uniform
+  // cell so the grid lines up). rowWidth drives a content-fit frame.
+  const tiers = (spec.tiers || []).map((t) => {
+    const sizes = t.nodes.map((n) => ({ w: nodeWidth(n), h: nodeHeight(n) }));
+    const grid = t.columns && t.nodes.length > t.columns;
+    if (grid) {
+      const cw = Math.max(...sizes.map((s) => s.w)), ch = Math.max(...sizes.map((s) => s.h));
+      const cols = Math.min(t.columns, t.nodes.length), rows = Math.ceil(t.nodes.length / cols);
+      return { t, grid, cols, cw, ch, rowWidth: cols * cw + (cols - 1) * G.nodeGap, blockH: rows * ch + (rows - 1) * G.nodeGap };
+    }
+    const rowWidth = sizes.reduce((s, z) => s + z.w, 0) + (sizes.length - 1) * G.nodeGap;
+    return { t, grid, sizes, rowWidth, blockH: Math.max(...sizes.map((s) => s.h)) };
+  });
+  const maxFrameW = Math.max(160, ...tiers.map((T) => T.rowWidth)) + 2 * G.padX;
+  const centerX = G.x0 + maxFrameW / 2;   // all main frames centered on this axis
+
+  let y = G.y0;
+  for (const T of tiers) {
+    const frameW = T.rowWidth + 2 * G.padX, frameX = centerX - frameW / 2;
+    const frameH = G.titleBand + T.blockH + G.padBottom;
+    frames.push({ frame: true, role: T.t.role, label: T.t.label, x: frameX, y, width: frameW, height: frameH });
+    const top = y + G.titleBand;
+    if (T.grid) {
+      T.t.nodes.forEach((node, i) => {
+        const r = Math.floor(i / T.cols), c = i % T.cols;
+        const inRow = Math.min(T.cols, T.t.nodes.length - r * T.cols);
+        const rw = inRow * T.cw + (inRow - 1) * G.nodeGap;
+        place(node, T.t, centerX - rw / 2 + c * (T.cw + G.nodeGap), top + r * (T.ch + G.nodeGap), T.cw, T.ch);
+      });
+    } else {
+      let nx = frameX + G.padX;
+      T.t.nodes.forEach((node, i) => {
+        const { w, h } = T.sizes[i];
+        place(node, T.t, nx, top + (T.blockH - h) / 2, w, h);
+        nx += w + G.nodeGap;
+      });
+    }
+    y += frameH + G.tierGap;
+  }
+  const stackRight = centerX + maxFrameW / 2;
+
+  // side groups: column-stacked, to the right of the main stack
+  let sx = stackRight + G.sideGap, sy = G.y0;
+  for (const grp of spec.sideGroups || []) {
+    const sizes = grp.nodes.map((n) => ({ w: nodeWidth(n), h: nodeHeight(n) }));
+    const cw = Math.max(...sizes.map((s) => s.w));
+    const frameH = G.titleBand + sizes.reduce((s, z) => s + z.h, 0) + (sizes.length - 1) * G.nodeGap + G.padBottom;
+    frames.push({ frame: true, role: grp.role, label: grp.label, x: sx, y: sy, width: cw + 2 * G.padX, height: frameH });
+    let ny = sy + G.titleBand;
+    grp.nodes.forEach((node, i) => { place(node, grp, sx + G.padX, ny, cw, sizes[i].h); sideIds.add(node.id); ny += sizes[i].h + G.nodeGap; });
+    sy += frameH + G.tierGap;
   }
 
   const emitArrow = (absPts, label) => {
@@ -198,19 +202,22 @@ export function layoutTiers(spec) {
     if (label) arr.label = { text: label, fontSize: 13 };
     edges.push(arr);
   };
+  const busX = stackRight + G.sideGap / 2;   // empty corridor between stack and side groups
   for (const e of spec.edges || []) {
     const a = box[e.from], b = box[e.to];
     if (!a || !b) { console.error(`warning: edge ${e.from}->${e.to} references an unknown node`); continue; }
-    if (b.cy > a.cy + 10) emitArrow([[a.cx, a.y + a.h + 4], [b.cx, b.y - 6]], e.label);
+    if (sideIds.has(e.to)) {
+      // To a side group: drop into the gap below the source, run out to the corridor,
+      // then up/down to the target — never slicing across tiers or same-row neighbors.
+      const gapY = a.y + a.h + G.tierGap / 2;
+      emitArrow([[a.cx, a.y + a.h + 4], [a.cx, gapY], [busX, gapY], [busX, b.cy], [b.x - 6, b.cy]], e.label);
+    } else if (sideIds.has(e.from)) {
+      const gapY = b.y - G.tierGap / 2;
+      emitArrow([[a.x - 4, a.cy], [busX, a.cy], [busX, gapY], [b.cx, gapY], [b.cx, b.y - 6]], e.label);
+    } else if (b.cy > a.cy + 10) emitArrow([[a.cx, a.y + a.h + 4], [b.cx, b.y - 6]], e.label);
     else if (b.cy < a.cy - 10) emitArrow([[a.cx, a.y - 4], [b.cx, b.y + b.h + 6]], e.label);
-    else if (b.cx > a.cx) {
-      // To the right. A far target (a side group) would slice through same-row
-      // neighbors, so drop below the row and route across.
-      if (b.x - (a.x + a.w) > 120) {
-        const yb = a.y + a.h + 30;
-        emitArrow([[a.cx, a.y + a.h + 4], [a.cx, yb], [b.x - 24, yb], [b.x - 24, b.cy], [b.x - 6, b.cy]], e.label);
-      } else emitArrow([[a.x + a.w + 4, a.cy], [b.x - 6, b.cy]], e.label);
-    } else emitArrow([[a.x - 4, a.cy], [b.x + b.w + 6, b.cy]], e.label);
+    else if (b.cx > a.cx) emitArrow([[a.x + a.w + 4, a.cy], [b.x - 6, b.cy]], e.label);
+    else emitArrow([[a.x - 4, a.cy], [b.x + b.w + 6, b.cy]], e.label);
   }
 
   return [...frames, ...nodes, ...edges];
