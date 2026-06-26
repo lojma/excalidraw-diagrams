@@ -25,8 +25,8 @@ Bundled, offline. Add any other devicon tech with `node icons/build.mjs --add <s
 
 **Services** — `openai`, `paypal`, `sendgrid`, `stripe`, `twilio`
 
-**Generic** — `api`, `bell`, `cache`, `cloud`, `database`, `gateway`, `globe`, `key`, `lock`, `mobile`, `queue`, `server`, `shield`, `user`, `web`
+**Generic** — `api`, `bell`, `cache`, `cloud`, `database`, `gateway`, `globe`, `key`, `lock`, `map`, `mobile`, `pin`, `queue`, `server`, `shield`, `user`, `web`
 
 **Social** — `apple`, `facebook`, `google`
 
-**Aliases** — `aws`→`amazonwebservices`, `dotnet`→`dotnetcore`, `gcp`→`googlecloud`, `golang`→`go`, `js`→`javascript`, `k8s`→`kubernetes`, `kafka`→`apachekafka`, `mongo`→`mongodb`, `next`→`nextjs`, `node`→`nodejs`, `nuxt`→`nuxtjs`, `postgres`→`postgresql`, `py`→`python`, `rn`→`react`, `tailwind`→`tailwindcss`, `ts`→`typescript`, `vue`→`vuejs`
+**Aliases** — `aws`→`amazonwebservices`, `dotnet`→`dotnetcore`, `gcp`→`googlecloud`, `golang`→`go`, `js`→`javascript`, `k8s`→`kubernetes`, `kafka`→`apachekafka`, `location`→`pin`, `maps`→`map`, `mongo`→`mongodb`, `next`→`nextjs`, `node`→`nodejs`, `nuxt`→`nuxtjs`, `postgres`→`postgresql`, `py`→`python`, `rn`→`react`, `tailwind`→`tailwindcss`, `ts`→`typescript`, `vue`→`vuejs`

@@ -52,7 +52,8 @@ browser. Two authoring paths, picked by diagram type:
    - `--style-json '{"strokeColor":"#1862ab","backgroundColor":"#e7f5ff"}'` to override.
    - Default opens your external browser. In an embedded/in-app browser
      environment (sandboxes `file://`), use `--serve` and open the printed
-     `http://localhost:PORT` URL instead.
+     `http://localhost:PORT` URL instead. Use `--no-open` to render without
+     launching a browser (e.g. when you only need the screenshot in step 4).
    - `render.mjs` prints the output HTML path on stdout — capture it for step 4.
    - See the flag list at the top of `render.mjs` if unsure.
 

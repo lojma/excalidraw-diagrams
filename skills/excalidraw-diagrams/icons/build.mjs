@@ -38,6 +38,7 @@ const GENERIC = {
   server: "server", database: "database", mobile: "smartphone", web: "monitor",
   shield: "shield", key: "key", gateway: "network", queue: "list", cloud: "cloud",
   globe: "globe", user: "user", bell: "bell", cache: "zap", lock: "lock", api: "braces",
+  map: "map", pin: "map-pin",
 };
 
 // social sign-in marks (simple-icons slug + brand hex) — better than devicon for auth UIs
@@ -61,7 +62,7 @@ const ALIASES = {
   js: "javascript", ts: "typescript", py: "python", golang: "go", node: "nodejs",
   vue: "vuejs", next: "nextjs", nuxt: "nuxtjs", tailwind: "tailwindcss", postgres: "postgresql",
   mongo: "mongodb", k8s: "kubernetes", aws: "amazonwebservices", gcp: "googlecloud",
-  kafka: "apachekafka", "dotnet": "dotnetcore", rn: "react",
+  kafka: "apachekafka", "dotnet": "dotnetcore", rn: "react", maps: "map", location: "pin",
 };
 
 async function fetchText(url) {

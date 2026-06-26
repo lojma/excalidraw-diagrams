@@ -65,6 +65,13 @@ An object (not an array) with `tiers`, optional `sideGroups`, and `edges`:
 | tier | `columns` | wrap the tier's nodes into a grid of N columns |
 | top  | `layoutOptions` | `{ nodeGap, tierGap, sideGap, padX, titleBand }` spacing |
 
+## Labels
+
+Keep edge labels sparse. Many labels in the same band (e.g. several edges into one
+tier, or a cluster of side-group edges) collide into an unreadable blob. Label only
+the edges whose purpose isn't obvious from the nodes themselves — a `Payments → Stripe`
+edge needs no "charge" label. A label shared by a whole converging bundle is shown once.
+
 ## When the layout isn't perfect
 
 Straight edges can still cross when many nodes in one tier point to many in the next.

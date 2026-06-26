@@ -759,6 +759,22 @@
       "Generic"
     ]
   },
+  "map": {
+    "file": "map.svg",
+    "source": "lucide",
+    "license": "ISC",
+    "tags": [
+      "Generic"
+    ]
+  },
+  "pin": {
+    "file": "pin.svg",
+    "source": "lucide",
+    "license": "ISC",
+    "tags": [
+      "Generic"
+    ]
+  },
   "apple": {
     "file": "apple.svg",
     "source": "simple-icons",
@@ -890,5 +906,13 @@
   "rn": {
     "file": "react.svg",
     "alias": "react"
+  },
+  "maps": {
+    "file": "map.svg",
+    "alias": "map"
+  },
+  "location": {
+    "file": "pin.svg",
+    "alias": "pin"
   }
 }
