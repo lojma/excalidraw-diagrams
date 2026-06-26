@@ -297,7 +297,10 @@ export async function main(argv) {
 
   const outDir = args.out ? dirname(args.out) : join(tmpdir(), "excalidraw-previews");
   mkdirSync(outDir, { recursive: true });
-  const outPath = args.out || join(outDir, `${slugify(title)}.html`);
+  // Default to a unique filename so each re-render opens a fresh browser tab
+  // (reopening the same file:// path just refocuses the stale tab). Pass --out to
+  // pin a path (e.g. for the screenshot gate).
+  const outPath = args.out || join(outDir, `${slugify(title)}-${Date.now().toString(36)}.html`);
   writeFileSync(outPath, html);
   console.log(outPath);
 
