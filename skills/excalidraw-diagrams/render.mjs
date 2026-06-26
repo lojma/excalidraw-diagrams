@@ -71,7 +71,7 @@ function imageElement(id, x, y, size, fileId) {
 // Expand author-friendly `role`/`frame`/`icon` fields into plain skeleton elements,
 // raw image elements, and an Excalidraw `files` map. Pure + exported for testing.
 export function expandSemantic(elements, { color = true } = {}) {
-  const skeleton = [], images = [], files = {};
+  const skeleton = [], images = [], files = {}, titles = [];
   let n = 0;
   const frameRole = (r) => (r === "backend" ? "service" : r || "neutral");
   for (const el of elements || []) {
@@ -82,8 +82,17 @@ export function expandSemantic(elements, { color = true } = {}) {
         backgroundColor: rest.backgroundColor ?? (color ? c.backgroundColor : "#f8f9fa"),
         strokeColor: rest.strokeColor ?? (color ? c.strokeColor : "#ced4da"),
         roundness: rest.roundness ?? { type: 3 } });
-      if (label) skeleton.push({ type: "text", x: (el.x ?? 0) + 16, y: (el.y ?? 0) + 12,
-        text: String(label), fontSize: 16, strokeColor: color ? c.title : "#868e96" });
+      if (label) {
+        // Title goes on the TOP layer (appended last) so a passing edge can't be drawn
+        // over it; a panel-colored swatch behind the text hides any line underneath.
+        const tx = (el.x ?? 0) + 16, ty = (el.y ?? 0) + 12;
+        const sw = String(label).length * 9 + 12;
+        titles.push({ type: "rectangle", x: tx - 6, y: ty - 4, width: sw, height: 26,
+          backgroundColor: color ? c.backgroundColor : "#f8f9fa", strokeColor: "transparent",
+          fillStyle: "solid", roundness: { type: 3 } });
+        titles.push({ type: "text", x: tx, y: ty, text: String(label), fontSize: 16,
+          strokeColor: color ? c.title : "#868e96" });
+      }
       continue;
     }
     const { role, icon, ...node } = el || {};
@@ -109,7 +118,7 @@ export function expandSemantic(elements, { color = true } = {}) {
     }
     skeleton.push(node);
   }
-  return { skeleton, images, files };
+  return { skeleton: [...skeleton, ...titles], images, files };
 }
 
 function inject(value) {

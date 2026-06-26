@@ -100,6 +100,18 @@ test("expandSemantic expands a frame into a tinted rect + title text", () => {
   assert.ok(text.y >= 20 && text.y < 64, "title sits in the top band");
 });
 
+test("expandSemantic draws frame titles on the top layer so edges can't hide them", () => {
+  const { skeleton } = expandSemantic([
+    { frame: true, role: "data", label: "Data", x: 0, y: 0, width: 200, height: 120 },
+    { type: "rectangle", x: 10, y: 60, width: 80, height: 40, label: { text: "node" } },
+    { type: "arrow", x: 0, y: 0, points: [[0, 0], [0, 50]] },
+  ]);
+  const titleIdx = skeleton.findIndex((e) => e.type === "text" && e.text === "Data");
+  const nodeIdx = skeleton.findIndex((e) => e.label && e.label.text === "node");
+  const arrowIdx = skeleton.findIndex((e) => e.type === "arrow");
+  assert.ok(titleIdx > nodeIdx && titleIdx > arrowIdx, "title renders after the node and the arrow");
+});
+
 test("expandSemantic embeds a known icon as a file + image, strips icon", () => {
   const { skeleton, images, files } = expandSemantic([
     { type: "rectangle", icon: "google", x: 0, y: 0, width: 150, height: 56, label: { text: "Google" } },
