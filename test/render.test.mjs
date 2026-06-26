@@ -216,7 +216,8 @@ test("layoutTiers routes a skip-tier edge around the stack, not through it", () 
   assert.equal(skip.points.length, 4, "skip edge is an orthogonal 4-point route");
   const corridorX = skip.x + skip.points[1][0];
   assert.ok(corridorX < leftEdge, "skip edge routes left of the whole stack");
-  assert.equal(adjacent.points.length, 2, "an adjacent edge stays a straight 2-point arrow");
+  const adjMinX = Math.min(...adjacent.points.map((p) => adjacent.x + p[0]));
+  assert.ok(adjMinX >= leftEdge - 1, "an adjacent edge routes within the stack, not around it");
 });
 
 const MM = {
@@ -238,7 +239,7 @@ test("layoutTiers routes a many-to-many gap with distinct orthogonal lanes", () 
   assert.equal(new Set(laneYs).size, 4, "each edge gets its own lane");
 });
 
-test("layoutTiers leaves a one-to-many gap as straight edges (not lanes)", () => {
+test("layoutTiers routes a one-to-many gap as orthogonal elbows (no diagonals)", () => {
   const spec = {
     tiers: [
       { label: "A", role: "service", nodes: [{ id: "a", label: "A" }] },
@@ -247,7 +248,10 @@ test("layoutTiers leaves a one-to-many gap as straight edges (not lanes)", () =>
     edges: [{ from: "a", to: "b1" }, { from: "a", to: "b2" }],
   };
   const arrows = layoutTiers(spec).filter((e) => e.type === "arrow");
-  for (const ar of arrows) assert.equal(ar.points.length, 2, "1->many stays straight, not orthogonal");
+  for (const ar of arrows) {
+    assert.equal(ar.points.length, 4, "every adjacent edge is an orthogonal elbow");
+    assert.equal(ar.points[1][1], ar.points[2][1], "the middle segment is a flat horizontal lane");
+  }
 });
 
 test("layoutTiers gives two skip-tier edges distinct corridor lanes", () => {

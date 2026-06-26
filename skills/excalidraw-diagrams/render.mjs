@@ -171,20 +171,16 @@ export function layoutTiers(spec) {
   const maxFrameW = Math.max(160, ...tiers.map((T) => T.rowWidth)) + 2 * G.padX;
   const centerX = G.x0 + maxFrameW / 2;   // all main frames centered on this axis
 
-  // Pre-scan adjacent down-edges per gap (tier i -> i+1). A gap with >=2 distinct
-  // sources AND >=2 distinct targets is "many-to-many" and routes as orthogonal
-  // lanes; it gets a taller gap so the lanes don't crowd.
+  // Pre-scan adjacent down-edges per gap (tier i -> i+1). Every such edge routes as
+  // an orthogonal elbow through the gap; a gap carrying more edges gets a taller
+  // channel so its parallel lanes don't crowd.
   const tierOf = {};
   (spec.tiers || []).forEach((t, i) => t.nodes.forEach((n) => { tierOf[n.id] = i; }));
   const gapEdges = {};
   for (const e of spec.edges || []) {
     if (tierOf[e.from] != null && tierOf[e.to] === tierOf[e.from] + 1) (gapEdges[tierOf[e.from]] ||= []).push(e);
   }
-  const gapMM = {};
-  for (const [i, es] of Object.entries(gapEdges)) {
-    if (new Set(es.map((e) => e.from)).size >= 2 && new Set(es.map((e) => e.to)).size >= 2) gapMM[i] = es.length;
-  }
-  const gapAfter = (ti) => (gapMM[ti] ? Math.max(G.tierGap, gapMM[ti] * 16 + 16) : G.tierGap);
+  const gapAfter = (ti) => { const n = (gapEdges[ti] || []).length; return n > 1 ? Math.max(G.tierGap, n * 16 + 16) : G.tierGap; };
 
   const tierSpan = [];
   let y = G.y0;
@@ -235,52 +231,27 @@ export function layoutTiers(spec) {
   };
   const busX = stackRight + G.sideGap / 2;   // empty corridor between stack and side groups
 
-  // Orthogonal lanes for many-to-many gaps: each edge drops from a distributed
-  // exit on its source face to its own horizontal lane in the gap channel, runs
-  // across, then drops into a distributed entry on its target face. Parallel lanes
-  // replace the diagonal tangle that straight edges make when many cross one gap.
+  // Every adjacent down-edge routes as an orthogonal elbow: it drops from a
+  // distributed exit on its source face to its own horizontal lane in the gap,
+  // runs across, then drops into a distributed entry on its target face — no
+  // diagonals, and parallel lanes keep dense gaps legible. A label shared by all
+  // edges into one target is shown once (centered), not repeated.
   const spread = (bx, idx, cnt) => bx.x + bx.w * (0.18 + 0.64 * ((idx + 1) / (cnt + 1)));
-  const ortho = new Map();   // edge -> { sx, tx, laneY }
-  for (const i of Object.keys(gapMM)) {
+  const ortho = new Map();   // edge -> { sx, tx, laneY, label }
+  for (const i of Object.keys(gapEdges)) {
     const es = gapEdges[i];
     const channelTop = tierSpan[+i].bottom, channelBot = tierSpan[+i + 1].top;
-    const sx = new Map(), tx = new Map();
+    const sx = new Map(), tx = new Map(), lbl = new Map();
     const groupBy = (key) => es.reduce((g, e) => ((g[e[key]] ||= []).push(e), g), {});
     for (const [sid, list] of Object.entries(groupBy("from")))
       list.slice().sort((p, q) => box[p.to].cx - box[q.to].cx).forEach((e, idx) => sx.set(e, spread(box[sid], idx, list.length)));
-    for (const [tid, list] of Object.entries(groupBy("to")))
-      list.slice().sort((p, q) => box[p.from].cx - box[q.from].cx).forEach((e, idx) => tx.set(e, spread(box[tid], idx, list.length)));
+    for (const [tid, list] of Object.entries(groupBy("to"))) {
+      const ord = list.slice().sort((p, q) => box[p.from].cx - box[q.from].cx);
+      const allSame = ord[0].label && ord.every((o) => o.label === ord[0].label);
+      ord.forEach((e, idx) => { tx.set(e, spread(box[tid], idx, ord.length)); lbl.set(e, allSame ? (idx === (ord.length - 1 >> 1) ? e.label : undefined) : e.label); });
+    }
     es.slice().sort((p, q) => (sx.get(p) + tx.get(p)) - (sx.get(q) + tx.get(q)))
-      .forEach((e, idx, ord) => ortho.set(e, { sx: sx.get(e), tx: tx.get(e), laneY: channelTop + (channelBot - channelTop) * ((idx + 1) / (ord.length + 1)) }));
-  }
-
-  // Group the vertical edges by the target face they enter so a converging bundle
-  // (many sources -> one node) fans across that face instead of piling its
-  // arrowheads at the center, and a label shared by the whole bundle shows once.
-  const downSibs = {}, upSibs = {};
-  for (const e of spec.edges || []) {
-    const a = box[e.from], b = box[e.to];
-    if (!a || !b || sideIds.has(e.from) || sideIds.has(e.to) || ortho.has(e)) continue;
-    // Skip-tier edges enter the target's left face (routed around the stack), so
-    // they are not part of any target's top/bottom converging fan.
-    if (a.tier != null && b.tier != null && Math.abs(b.tier - a.tier) >= 2) continue;
-    if (b.cy > a.cy + 10) (downSibs[e.to] ||= []).push(e);
-    else if (b.cy < a.cy - 10) (upSibs[e.to] ||= []).push(e);
-  }
-  // Attach x on the target face + a de-duplicated label, for edge `e` among its
-  // siblings entering the same face. One edge -> dead-center, no change.
-  function faceAttach(e, sibsMap) {
-    const b = box[e.to], sibs = sibsMap[e.to];
-    if (!sibs || sibs.length < 2) return { tx: b.cx, label: e.label };
-    const ordered = sibs.slice().sort((p, q) => box[p.from].cx - box[q.from].cx);
-    const i = ordered.indexOf(e), k = ordered.length;
-    // Spread across the node's inner 64% so the outer arrowheads stay off the
-    // rounded corners and clear of the frame's top-left title.
-    const m = 0.18;
-    const tx = b.x + b.w * (m + (1 - 2 * m) * ((i + 1) / (k + 1)));
-    const allSame = e.label && ordered.every((o) => o.label === e.label);
-    const label = allSame ? (i === (k - 1) >> 1 ? e.label : undefined) : e.label;
-    return { tx, label };
+      .forEach((e, idx, ord) => ortho.set(e, { sx: sx.get(e), tx: tx.get(e), laneY: channelTop + (channelBot - channelTop) * ((idx + 1) / (ord.length + 1)), label: lbl.get(e) }));
   }
 
   const leftBusX = G.x0 - G.sideGap / 2;   // corridor to the left of the main stack
@@ -302,14 +273,14 @@ export function layoutTiers(spec) {
       const laneX = leftBusX - skipLane++ * 16;
       emitArrow([[a.x - 4, a.cy], [laneX, a.cy], [laneX, b.cy], [b.x - 6, b.cy]], e.label);
     } else if (ortho.has(e)) {
-      const { sx, tx, laneY } = ortho.get(e);
-      emitArrow([[sx, a.y + a.h + 4], [sx, laneY], [tx, laneY], [tx, b.y - 6]], e.label);
+      const { sx, tx, laneY, label } = ortho.get(e);
+      emitArrow([[sx, a.y + a.h + 4], [sx, laneY], [tx, laneY], [tx, b.y - 6]], label);
     } else if (b.cy > a.cy + 10) {
-      const { tx, label } = faceAttach(e, downSibs);
-      emitArrow([[a.cx, a.y + a.h + 4], [tx, b.y - 6]], label);
+      const midY = (a.y + a.h + b.y) / 2;   // stray down-edge: orthogonal elbow through the gap
+      emitArrow([[a.cx, a.y + a.h + 4], [a.cx, midY], [b.cx, midY], [b.cx, b.y - 6]], e.label);
     } else if (b.cy < a.cy - 10) {
-      const { tx, label } = faceAttach(e, upSibs);
-      emitArrow([[a.cx, a.y - 4], [tx, b.y + b.h + 6]], label);
+      const midY = (a.y + b.y + b.h) / 2;   // up-edge: orthogonal elbow through the gap
+      emitArrow([[a.cx, a.y - 4], [a.cx, midY], [b.cx, midY], [b.cx, b.y + b.h + 6]], e.label);
     } else if (b.cx > a.cx) emitArrow([[a.x + a.w + 4, a.cy], [b.x - 6, b.cy]], e.label);
     else emitArrow([[a.x - 4, a.cy], [b.x + b.w + 6, b.cy]], e.label);
   }
