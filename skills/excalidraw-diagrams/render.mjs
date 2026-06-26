@@ -205,6 +205,33 @@ export function layoutTiers(spec) {
     edges.push(arr);
   };
   const busX = stackRight + G.sideGap / 2;   // empty corridor between stack and side groups
+
+  // Group the vertical edges by the target face they enter so a converging bundle
+  // (many sources -> one node) fans across that face instead of piling its
+  // arrowheads at the center, and a label shared by the whole bundle shows once.
+  const downSibs = {}, upSibs = {};
+  for (const e of spec.edges || []) {
+    const a = box[e.from], b = box[e.to];
+    if (!a || !b || sideIds.has(e.from) || sideIds.has(e.to)) continue;
+    if (b.cy > a.cy + 10) (downSibs[e.to] ||= []).push(e);
+    else if (b.cy < a.cy - 10) (upSibs[e.to] ||= []).push(e);
+  }
+  // Attach x on the target face + a de-duplicated label, for edge `e` among its
+  // siblings entering the same face. One edge -> dead-center, no change.
+  function faceAttach(e, sibsMap) {
+    const b = box[e.to], sibs = sibsMap[e.to];
+    if (!sibs || sibs.length < 2) return { tx: b.cx, label: e.label };
+    const ordered = sibs.slice().sort((p, q) => box[p.from].cx - box[q.from].cx);
+    const i = ordered.indexOf(e), k = ordered.length;
+    // Spread across the node's inner 64% so the outer arrowheads stay off the
+    // rounded corners and clear of the frame's top-left title.
+    const m = 0.18;
+    const tx = b.x + b.w * (m + (1 - 2 * m) * ((i + 1) / (k + 1)));
+    const allSame = e.label && ordered.every((o) => o.label === e.label);
+    const label = allSame ? (i === (k - 1) >> 1 ? e.label : undefined) : e.label;
+    return { tx, label };
+  }
+
   for (const e of spec.edges || []) {
     const a = box[e.from], b = box[e.to];
     if (!a || !b) { console.error(`warning: edge ${e.from}->${e.to} references an unknown node`); continue; }
@@ -216,9 +243,13 @@ export function layoutTiers(spec) {
     } else if (sideIds.has(e.from)) {
       const gapY = b.y - G.tierGap / 2;
       emitArrow([[a.x - 4, a.cy], [busX, a.cy], [busX, gapY], [b.cx, gapY], [b.cx, b.y - 6]], e.label);
-    } else if (b.cy > a.cy + 10) emitArrow([[a.cx, a.y + a.h + 4], [b.cx, b.y - 6]], e.label);
-    else if (b.cy < a.cy - 10) emitArrow([[a.cx, a.y - 4], [b.cx, b.y + b.h + 6]], e.label);
-    else if (b.cx > a.cx) emitArrow([[a.x + a.w + 4, a.cy], [b.x - 6, b.cy]], e.label);
+    } else if (b.cy > a.cy + 10) {
+      const { tx, label } = faceAttach(e, downSibs);
+      emitArrow([[a.cx, a.y + a.h + 4], [tx, b.y - 6]], label);
+    } else if (b.cy < a.cy - 10) {
+      const { tx, label } = faceAttach(e, upSibs);
+      emitArrow([[a.cx, a.y - 4], [tx, b.y + b.h + 6]], label);
+    } else if (b.cx > a.cx) emitArrow([[a.x + a.w + 4, a.cy], [b.x - 6, b.cy]], e.label);
     else emitArrow([[a.x - 4, a.cy], [b.x + b.w + 6, b.cy]], e.label);
   }
 

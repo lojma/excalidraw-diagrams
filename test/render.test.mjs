@@ -155,3 +155,27 @@ test("layoutTiers skips an edge to an unknown node without throwing", () => {
     .filter((e) => e.type === "arrow");
   assert.equal(arrows.length, 0);
 });
+
+const CONVERGE = {
+  tiers: [
+    { label: "Clients", role: "client", nodes: [{ id: "a", label: "A" }, { id: "b", label: "B" }, { id: "c", label: "C" }] },
+    { label: "Edge", role: "service", nodes: [{ id: "cdn", label: "CDN" }] },
+  ],
+  edges: [{ from: "a", to: "cdn", label: "assets" }, { from: "b", to: "cdn", label: "assets" }, { from: "c", to: "cdn", label: "assets" }],
+};
+
+test("layoutTiers fans converging edges across the target face and de-dups a shared label", () => {
+  const arrows = layoutTiers(CONVERGE).filter((e) => e.type === "arrow");
+  assert.equal(arrows.length, 3);
+  const ends = arrows.map((a) => Math.round(a.x + a.points.at(-1)[0]));
+  assert.equal(new Set(ends).size, 3, "each arrow attaches at a distinct x on the target top");
+  assert.equal(arrows.filter((a) => a.label).length, 1, "an identical bundle label appears once");
+});
+
+test("layoutTiers keeps distinct bundle labels while still fanning the edges", () => {
+  const spec = { ...CONVERGE, edges: [{ from: "a", to: "cdn", label: "img" }, { from: "b", to: "cdn", label: "js" }, { from: "c", to: "cdn", label: "css" }] };
+  const arrows = layoutTiers(spec).filter((e) => e.type === "arrow");
+  assert.equal(arrows.filter((a) => a.label).length, 3, "distinct labels are all kept");
+  const ends = arrows.map((a) => Math.round(a.x + a.points.at(-1)[0]));
+  assert.equal(new Set(ends).size, 3, "edges still fan to distinct attach points");
+});
