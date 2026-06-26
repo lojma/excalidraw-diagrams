@@ -126,7 +126,9 @@ function nodeWidth(node) {
   return Math.max(node.width || 0, 120, text * 11 + (node.icon ? 92 : 40));
 }
 
-function nodeHeight(node) { return node.height || (node.shape === "ellipse" ? 96 : 56); }
+// Uniform node height keeps every frame the same height (an ellipse becomes a flat
+// pill rather than a tall circle). Authors can still override per node with `height`.
+function nodeHeight(node) { return node.height || 56; }
 
 export function layoutTiers(spec) {
   const G = { x0: 60, y0: 40, nodeGap: 40, tierGap: 60, sideGap: 90,
