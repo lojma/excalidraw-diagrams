@@ -96,6 +96,9 @@ export function expandSemantic(elements, { color = true } = {}) {
       continue;
     }
     const { role, icon, ...node } = el || {};
+    // Arrows must render as sharp polylines: Excalidraw rounds linear elements by
+    // default, which bends orthogonal/skip/lane routes into wavy curves.
+    if (node.type === "arrow" && node.roundness === undefined) node.roundness = null;
     if (color && role && NODE_COLORS[role]) {
       node.backgroundColor = node.backgroundColor ?? NODE_COLORS[role].backgroundColor;
       node.strokeColor = node.strokeColor ?? NODE_COLORS[role].strokeColor;

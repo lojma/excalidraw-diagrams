@@ -122,6 +122,11 @@ test("expandSemantic embeds a known icon as a file + image, strips icon", () => 
   assert.ok(files["icon-google"].dataURL.startsWith("data:image/svg+xml;base64,"));
 });
 
+test("expandSemantic forces arrows sharp (roundness null) so orthogonal bends are not curved", () => {
+  const { skeleton } = expandSemantic([{ type: "arrow", points: [[0, 0], [0, 20], [40, 20]] }]);
+  assert.equal(skeleton.find((e) => e.type === "arrow").roundness, null);
+});
+
 test("expandSemantic skips an unknown icon without failing", () => {
   const { images, files } = expandSemantic([{ type: "rectangle", icon: "definitely-not-an-icon", x: 0, y: 0 }]);
   assert.equal(images.length, 0);
