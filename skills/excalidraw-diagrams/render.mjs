@@ -260,13 +260,16 @@ export function layoutTiers(spec) {
 
   const leftBusX = G.x0 - G.sideGap / 2;   // corridor to the left of the main stack
   let skipLane = 0;
+  const sideLaneOf = {};   // per source-tier counter so stacked side edges don't merge
   for (const e of spec.edges || []) {
     const a = box[e.from], b = box[e.to];
     if (!a || !b) { console.error(`warning: edge ${e.from}->${e.to} references an unknown node`); continue; }
     if (sideIds.has(e.to)) {
       // To a side group: drop CLEAR of the source's frame, run out to the corridor,
       // then up/down to the target — never slicing across tiers or same-row neighbors.
-      const gapY = belowFrame(a);
+      // Edges leaving the same tier get separate lanes so they don't stack into one line.
+      const lane = (sideLaneOf[a.tier] = (sideLaneOf[a.tier] ?? -1) + 1);
+      const gapY = belowFrame(a) + lane * 16;
       emitArrow([[a.cx, a.y + a.h + 4], [a.cx, gapY], [busX, gapY], [busX, b.cy], [b.x - 6, b.cy]], e.label, SECONDARY);
     } else if (sideIds.has(e.from)) {
       const gapY = b.y - G.tierGap / 2;
