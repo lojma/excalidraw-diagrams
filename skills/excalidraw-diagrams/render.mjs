@@ -117,6 +117,105 @@ function inject(value) {
   return JSON.stringify(value).replace(/</g, "\\u003c");
 }
 
+// ---- Declarative tier-grid auto-layout ---------------------------------------
+// Turn a coordinate-free { tiers, sideGroups, edges } spec into the same skeleton
+// array the manual JSON path uses (frames + role/icon nodes + arrows). Built-in
+// rules place everything; the author overrides only what they want.
+function nodeWidth(node) {
+  const text = (node.label || node.id || "").length;
+  return Math.max(node.width || 0, 120, text * 11 + (node.icon ? 92 : 40));
+}
+
+export function layoutTiers(spec) {
+  const G = { x0: 60, y0: 40, nodeGap: 40, tierGap: 60, sideGap: 90,
+    padX: 30, titleBand: 44, padBottom: 24, h: 56, ...(spec.layoutOptions || {}) };
+  const box = {};        // id -> {x,y,w,h,cx,cy}
+  const frames = [], nodes = [], edges = [];
+
+  // Uniform cell per tier keeps columns aligned and tidy.
+  const tierCell = (t) => {
+    const w = Math.max(...t.nodes.map(nodeWidth));
+    const h = Math.max(G.h, ...t.nodes.map((n) => n.height || (n.shape === "ellipse" ? 96 : G.h)));
+    return { w, h };
+  };
+  const rowWidth = (n, cellW, cols) => {
+    const c = Math.min(cols || n, n);
+    return c * cellW + (c - 1) * G.nodeGap;
+  };
+
+  // main stack width = widest tier row
+  const cells = (spec.tiers || []).map(tierCell);
+  const contentW = Math.max(120, ...(spec.tiers || []).map((t, i) =>
+    rowWidth(t.nodes.length, cells[i].w, t.columns)));
+  const frameW = contentW + 2 * G.padX;
+
+  let y = G.y0;
+  (spec.tiers || []).forEach((t, ti) => {
+    const cell = cells[ti];
+    const cols = Math.min(t.columns || t.nodes.length, t.nodes.length);
+    const rows = Math.ceil(t.nodes.length / cols);
+    const gridH = rows * cell.h + (rows - 1) * G.nodeGap;
+    const frameH = G.titleBand + gridH + G.padBottom;
+    frames.push({ frame: true, role: t.role, label: t.label, x: G.x0, y, width: frameW, height: frameH });
+    t.nodes.forEach((node, idx) => {
+      const r = Math.floor(idx / cols), c = idx % cols;
+      const inRow = Math.min(cols, t.nodes.length - r * cols);
+      const rw = rowWidth(inRow, cell.w);
+      const left = G.x0 + (frameW - rw) / 2;
+      const nx = left + c * (cell.w + G.nodeGap);
+      const ny = y + G.titleBand + r * (cell.h + G.nodeGap);
+      placeNode(node, t, nx, ny, cell.w, cell.h);
+    });
+    y += frameH + G.tierGap;
+  });
+
+  // side groups: column-stacked, to the right of the main stack
+  let sx = G.x0 + frameW + G.sideGap, sy = G.y0;
+  for (const grp of spec.sideGroups || []) {
+    const cw = Math.max(...grp.nodes.map(nodeWidth));
+    const ch = Math.max(G.h, ...grp.nodes.map((n) => n.height || G.h));
+    const frameH = G.titleBand + grp.nodes.length * ch + (grp.nodes.length - 1) * G.nodeGap + G.padBottom;
+    frames.push({ frame: true, role: grp.role, label: grp.label, x: sx, y: sy, width: cw + 2 * G.padX, height: frameH });
+    grp.nodes.forEach((node, idx) => {
+      placeNode(node, grp, sx + G.padX, sy + G.titleBand + idx * (ch + G.nodeGap), cw, ch);
+    });
+    sy += frameH + G.tierGap;
+  }
+
+  function placeNode(node, group, x, ny, w, h) {
+    const width = node.width || w, height = node.height || h;
+    nodes.push({ type: node.shape || "rectangle", role: node.role || group.role, icon: node.icon,
+      x: node.pin?.x ?? x, y: node.pin?.y ?? ny, width, height, label: { text: node.label || node.id } });
+    const bx = node.pin?.x ?? x, by = node.pin?.y ?? ny;
+    box[node.id] = { x: bx, y: by, w: width, h: height, cx: bx + width / 2, cy: by + height / 2 };
+  }
+
+  const emitArrow = (absPts, label) => {
+    const [x, y] = absPts[0];
+    const pts = absPts.map(([px, py]) => [px - x, py - y]);
+    const last = pts[pts.length - 1];
+    const arr = { type: "arrow", x, y, width: last[0], height: last[1], points: pts, endArrowhead: "arrow" };
+    if (label) arr.label = { text: label, fontSize: 13 };
+    edges.push(arr);
+  };
+  for (const e of spec.edges || []) {
+    const a = box[e.from], b = box[e.to];
+    if (!a || !b) { console.error(`warning: edge ${e.from}->${e.to} references an unknown node`); continue; }
+    if (b.cy > a.cy + 10) emitArrow([[a.cx, a.y + a.h + 4], [b.cx, b.y - 6]], e.label);
+    else if (b.cy < a.cy - 10) emitArrow([[a.cx, a.y - 4], [b.cx, b.y + b.h + 6]], e.label);
+    else if (b.cx > a.cx) {
+      // To the right. A far target (a side group) would slice through same-row
+      // neighbors, so drop below the row and route across.
+      if (b.x - (a.x + a.w) > 120) {
+        const yb = a.y + a.h + 30;
+        emitArrow([[a.cx, a.y + a.h + 4], [a.cx, yb], [b.x - 24, yb], [b.x - 24, b.cy], [b.x - 6, b.cy]], e.label);
+      } else emitArrow([[a.x + a.w + 4, a.cy], [b.x - 6, b.cy]], e.label);
+    } else emitArrow([[a.x - 4, a.cy], [b.x + b.w + 6, b.cy]], e.label);
+  }
+
+  return [...frames, ...nodes, ...edges];
+}
+
 export function buildHtml({ template, title, mermaid, style, mode = "mermaid", elements = [], images = [], files = {} }) {
   return template
     .replaceAll("__TITLE__", inject(title))
@@ -179,8 +278,12 @@ export async function main(argv) {
     // author-friendly role/frame/icon fields expanded into colors + embedded icons.
     mode = "json";
     const raw = JSON.parse(readFileSync(args.fromJson, "utf8"));
+    // An array is a manual skeleton; an object with `tiers` is a declarative
+    // auto-layout spec that we place first, then expand.
+    const skeleton = Array.isArray(raw) ? raw : layoutTiers(raw);
+    if (!Array.isArray(raw) && raw.title && !args.title) args.title = raw.title;
     const color = !args.noColor && args.style !== "mono";
-    ({ skeleton: elements, images, files } = expandSemantic(raw, { color }));
+    ({ skeleton: elements, images, files } = expandSemantic(skeleton, { color }));
   } else if (args._[0]) {
     mermaid = readFileSync(args._[0], "utf8");
   } else {

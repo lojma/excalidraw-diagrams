@@ -26,20 +26,21 @@ browser. Two authoring paths, picked by diagram type:
    | flow / process / decision / request path | Mermaid `flowchart` |
    | actors/services exchanging messages over time | Mermaid `sequenceDiagram` |
    | classes / data model | Mermaid `classDiagram` |
-   | architecture / system map (grouped components) | **Excalidraw JSON** — read `references/architecture-json.md` |
+   | architecture / system map (grouped components) | **Declarative tiers** — read `references/architecture-layout.md` |
 
    Only those three Mermaid families render as editable elements; other Mermaid
-   types degrade to a flat image — don't use them. Architecture maps are authored
-   directly as Excalidraw JSON because dagre lays grouped components out poorly
-   (floating groups, cross-canvas edges, wrapped circle text).
+   types degrade to a flat image — don't use them. Architecture maps use the Excalidraw
+   paths below because dagre lays grouped components out poorly (floating groups,
+   cross-canvas edges, wrapped circle text).
 
 2. **Author the diagram.**
    - *Mermaid path:* write Mermaid following the quality rules below; save to a
      file or pipe via stdin.
-   - *Architecture (JSON) path:* author a JSON array of Excalidraw skeleton
-     elements per `references/architecture-json.md`; save to a `.json` file. Use the
-     `role` / `frame` / `icon` fields — the renderer adds semantic color, titled
-     panels, and real SVG icons by default (`--style mono` for grayscale).
+   - *Architecture path:* write a **declarative tiers spec** (no coordinates) per
+     `references/architecture-layout.md` — list tiers, their nodes (with `role`/`icon`),
+     and edges; the renderer lays it out with semantic color, titled frames, and real
+     SVG icons (`--style mono` for grayscale). For pixel-level control, drop to the
+     manual skeleton (`references/architecture-json.md`). Save to a `.json` file.
 
 3. **Render it:**
    ```bash

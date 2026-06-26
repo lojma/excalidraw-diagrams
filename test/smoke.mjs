@@ -3,7 +3,7 @@ import { readFileSync, mkdtempSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { buildHtml, resolveStyle, expandSemantic } from "../skills/excalidraw-diagrams/render.mjs";
+import { buildHtml, resolveStyle, expandSemantic, layoutTiers } from "../skills/excalidraw-diagrams/render.mjs";
 import { screenshot } from "../skills/excalidraw-diagrams/shot.mjs";
 
 const here = (p) => fileURLToPath(new URL(p, import.meta.url));
@@ -39,6 +39,15 @@ await smoke("json", buildHtml({
     JSON.parse(readFileSync(here("./sample-arch.json"), "utf8")), { color: true });
   await smoke("json-icons", buildHtml({
     template, title: "smoke-arch", style, mode: "json", elements: skeleton, images, files,
+  }));
+}
+
+// Declarative tiers auto-layout
+{
+  const spec = JSON.parse(readFileSync(here("./sample-tiers.json"), "utf8"));
+  const { skeleton, images, files } = expandSemantic(layoutTiers(spec), { color: true });
+  await smoke("tiers", buildHtml({
+    template, title: "smoke-tiers", style, mode: "json", elements: skeleton, images, files,
   }));
 }
 

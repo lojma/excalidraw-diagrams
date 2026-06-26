@@ -1,0 +1,18 @@
+{
+  "layout": "tiers",
+  "tiers": [
+    { "label": "Client", "role": "client", "nodes": [{ "id": "web", "label": "Web App", "icon": "web" }] },
+    { "label": "Backend", "role": "service", "nodes": [
+      { "id": "api", "label": "API", "icon": "gateway" }, { "id": "auth", "label": "Auth", "icon": "shield" }] },
+    { "label": "Data", "role": "data", "nodes": [
+      { "id": "pg", "label": "Postgres", "icon": "postgres" }, { "id": "rd", "label": "Redis", "icon": "redis", "shape": "ellipse" }] }
+  ],
+  "sideGroups": [
+    { "label": "External", "role": "external", "nodes": [{ "id": "stripe", "label": "Stripe", "icon": "stripe" }] }
+  ],
+  "edges": [
+    { "from": "web", "to": "api" }, { "from": "api", "to": "auth" },
+    { "from": "auth", "to": "pg" }, { "from": "auth", "to": "rd", "label": "session" },
+    { "from": "api", "to": "stripe", "label": "pay" }
+  ]
+}

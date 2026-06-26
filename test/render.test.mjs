@@ -1,6 +1,16 @@
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { slugify, STYLE_PRESETS, resolveStyle, buildHtml, expandSemantic, NODE_COLORS } from "../skills/excalidraw-diagrams/render.mjs";
+import { slugify, STYLE_PRESETS, resolveStyle, buildHtml, expandSemantic, NODE_COLORS, layoutTiers } from "../skills/excalidraw-diagrams/render.mjs";
+
+const TIERS = {
+  tiers: [
+    { label: "Client", role: "client", nodes: [{ id: "c", label: "Client", icon: "mobile" }] },
+    { label: "Backend", role: "service", nodes: [
+      { id: "gw", label: "API Gateway", icon: "gateway" }, { id: "auth", label: "Auth", icon: "shield" }] },
+  ],
+  sideGroups: [{ label: "External", role: "external", nodes: [{ id: "x", label: "Stripe", icon: "stripe" }] }],
+  edges: [{ from: "c", to: "gw" }, { from: "gw", to: "x", label: "pay" }],
+};
 
 test("slugify lowercases and dashes non-alphanumerics", () => {
   assert.equal(slugify("Auth Flow!"), "auth-flow");
@@ -104,4 +114,44 @@ test("expandSemantic skips an unknown icon without failing", () => {
   const { images, files } = expandSemantic([{ type: "rectangle", icon: "definitely-not-an-icon", x: 0, y: 0 }]);
   assert.equal(images.length, 0);
   assert.equal(Object.keys(files).length, 0);
+});
+
+test("layoutTiers emits frames, nodes and arrows from a coordinate-free spec", () => {
+  const els = layoutTiers(TIERS);
+  const frames = els.filter((e) => e.frame);
+  const nodes = els.filter((e) => e.type && e.type !== "arrow");
+  const arrows = els.filter((e) => e.type === "arrow");
+  assert.equal(frames.length, 3, "2 tiers + 1 side group");
+  assert.equal(nodes.length, 4, "all nodes placed");
+  assert.equal(arrows.length, 2, "both edges routed");
+  for (const n of nodes) assert.ok(typeof n.x === "number" && typeof n.y === "number");
+});
+
+test("layoutTiers stacks tiers vertically and aligns their frames", () => {
+  const frames = layoutTiers(TIERS).filter((e) => e.frame);
+  const [client, backend] = frames; // main-stack frames are emitted first, in order
+  assert.ok(backend.y > client.y, "tiers stack downward");
+  assert.equal(client.x, backend.x, "main frames share x");
+  assert.equal(client.width, backend.width, "main frames share width");
+});
+
+test("layoutTiers places side groups to the right of the main stack", () => {
+  const frames = layoutTiers(TIERS).filter((e) => e.frame);
+  const side = frames[2];
+  const main = frames[0];
+  assert.ok(side.x >= main.x + main.width, "side group sits right of the stack");
+});
+
+test("layoutTiers sizes icon nodes wide enough and routes a down-edge downward", () => {
+  const els = layoutTiers(TIERS);
+  const gw = els.find((e) => e.label && e.label.text === "API Gateway");
+  assert.ok(gw.width >= "API Gateway".length * 11 + 92, "icon node sized to text + icon");
+  const down = els.filter((e) => e.type === "arrow")[0]; // c -> gw is downward
+  assert.ok(down.points.at(-1)[1] > 0, "down edge points downward");
+});
+
+test("layoutTiers skips an edge to an unknown node without throwing", () => {
+  const arrows = layoutTiers({ tiers: TIERS.tiers, edges: [{ from: "gw", to: "nope" }] })
+    .filter((e) => e.type === "arrow");
+  assert.equal(arrows.length, 0);
 });
