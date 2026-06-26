@@ -161,6 +161,21 @@ test("layoutTiers styles side-group and skip edges as secondary (dashed), primar
   assert.equal(skip.strokeStyle, "dashed", "skip-tier edge is dashed");
 });
 
+test("layoutTiers draws a single dashed connector to a side group targeted by its id", () => {
+  const spec = {
+    tiers: [{ label: "T", role: "service", nodes: [{ id: "core", label: "Core" }] }],
+    sideGroups: [{ id: "ext", label: "External", role: "external", nodes: [{ id: "s1", label: "S1" }, { id: "s2", label: "S2" }] }],
+    edges: [{ from: "core", to: "ext", label: "integrations" }],
+  };
+  const els = layoutTiers(spec);
+  const arrows = els.filter((e) => e.type === "arrow");
+  assert.equal(arrows.length, 1, "exactly one connector to the group");
+  const grp = els.filter((e) => e.frame).find((f) => f.label === "External");
+  const endX = arrows[0].x + arrows[0].points.at(-1)[0];
+  assert.ok(Math.abs(endX - grp.x) < 12, "arrow ends at the group's left edge");
+  assert.equal(arrows[0].strokeStyle, "dashed", "group connector is secondary/dashed");
+});
+
 test("layoutTiers places side groups to the right of the main stack", () => {
   const frames = layoutTiers(TIERS).filter((e) => e.frame);
   const side = frames[2];

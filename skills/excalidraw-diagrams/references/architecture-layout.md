@@ -45,6 +45,9 @@ An object (not an array) with `tiers`, optional `sideGroups`, and `edges`:
 - A tier's nodes flow in a centered row; nodes are sized to their text (+ icon).
 - All main-stack frames share one width so they line up.
 - `sideGroups` stack to the **right** of the main stack (e.g. external providers).
+  Give a side group an `id` and an edge may target the **whole group**
+  (`{"from":"core","to":"ext","label":"integrations"}`) — one connector into the
+  group's edge, instead of many separate lines into each node.
 - Edges are drawn straight between the nearest faces; an edge to a side group drops
   below its row and routes across so it doesn't cut through neighbors.
 - An edge that **skips a tier** (e.g. tier 1 → tier 3) auto-routes around the left

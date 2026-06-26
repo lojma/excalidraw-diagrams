@@ -210,12 +210,15 @@ export function layoutTiers(spec) {
   const stackRight = centerX + maxFrameW / 2;
 
   // side groups: column-stacked, to the right of the main stack
+  const groupBox = {};   // group id -> frame box, for edges that target a whole group
   let sx = stackRight + G.sideGap, sy = G.y0;
   for (const grp of spec.sideGroups || []) {
     const sizes = grp.nodes.map((n) => ({ w: nodeWidth(n), h: nodeHeight(n) }));
     const cw = Math.max(...sizes.map((s) => s.w));
+    const frameW = cw + 2 * G.padX;
     const frameH = G.titleBand + sizes.reduce((s, z) => s + z.h, 0) + (sizes.length - 1) * G.nodeGap + G.padBottom;
-    frames.push({ frame: true, role: grp.role, label: grp.label, x: sx, y: sy, width: cw + 2 * G.padX, height: frameH });
+    frames.push({ frame: true, role: grp.role, label: grp.label, x: sx, y: sy, width: frameW, height: frameH });
+    if (grp.id) groupBox[grp.id] = { x: sx, y: sy, w: frameW, h: frameH, cx: sx + frameW / 2, cy: sy + frameH / 2 };
     let ny = sy + G.titleBand;
     grp.nodes.forEach((node, i) => { place(node, grp, sx + G.padX, ny, cw, sizes[i].h); sideIds.add(node.id); ny += sizes[i].h + G.nodeGap; });
     sy += frameH + G.tierGap;
@@ -262,7 +265,17 @@ export function layoutTiers(spec) {
   let skipLane = 0;
   const sideLaneOf = {};   // per source-tier counter so stacked side edges don't merge
   for (const e of spec.edges || []) {
-    const a = box[e.from], b = box[e.to];
+    const a = box[e.from];
+    if (a && groupBox[e.to]) {
+      // Edge to a whole side group: one connector into the group's left edge,
+      // laned like the other side connectors so several don't stack.
+      const g = groupBox[e.to];
+      const lane = (sideLaneOf[a.tier] = (sideLaneOf[a.tier] ?? -1) + 1);
+      const gapY = belowFrame(a) + lane * 16;
+      emitArrow([[a.cx, a.y + a.h + 4], [a.cx, gapY], [busX, gapY], [busX, g.cy], [g.x - 6, g.cy]], e.label, SECONDARY);
+      continue;
+    }
+    const b = box[e.to];
     if (!a || !b) { console.error(`warning: edge ${e.from}->${e.to} references an unknown node`); continue; }
     if (sideIds.has(e.to)) {
       // To a side group: drop CLEAR of the source's frame, run out to the corridor,
