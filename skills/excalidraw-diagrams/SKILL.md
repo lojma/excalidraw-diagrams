@@ -31,7 +31,9 @@ browser. Two authoring paths, picked by diagram type:
    Only those three Mermaid families render as editable elements; other Mermaid
    types degrade to a flat image — don't use them. Architecture maps use the Excalidraw
    paths below because dagre lays grouped components out poorly (floating groups,
-   cross-canvas edges, wrapped circle text).
+   cross-canvas edges, wrapped circle text). For these maps, prioritize clean grouping
+   and disciplined connector routing: short local arrows, quiet dashed secondary lines,
+   no perimeter loops, and no dashed lines that look like extra containers.
 
 2. **Author the diagram.**
    - *Mermaid path:* write Mermaid following the quality rules below; save to a
@@ -68,10 +70,17 @@ browser. Two authoring paths, picked by diagram type:
 
    | Symptom | Remedy |
    |---------|--------|
-   | Arrows cross blocks / tangle | Mermaid: change direction or split. JSON: realign columns, reroute |
+   | Arrows cross blocks / tangle | Mermaid: change direction or split. Tiers: reorder a tier's nodes near their sources |
    | Label text wraps / breaks mid-word | JSON: enlarge the node to fit its text |
    | Group label sits under an arrowhead | JSON: move the group label to the box's top-left |
    | Layout cramped | Fewer nodes, or split into overview + detail |
+   | Dashed line forms a large outer rectangle | Reroute as a shorter local connector; don't let secondary lines look like containers |
+   | Secondary connectors dominate | Make them lighter, dashed, and shorter |
+   | Connector runs too close to a group frame | Move it away — 20–32 px whitespace from borders |
+   | Long line crosses most of the canvas | Replace with a compact labeled connector or a connector to the whole group |
+   | External bus looks like a wall | Move it by the external group, shorten it, or collapse to one labeled connector |
+   | Stacked horizontal lines between tiers | Separate lanes 12–16 px, or simplify to vertical drops |
+   | Connector label floats awkwardly | Place it above the line, away from corners/intersections; small white chip if possible |
 
    If `shot.mjs` returns `"ok":false` / `"canvasCount":0`, that is usually a
    slow-CDN flake — just run it once more before concluding anything is wrong.
@@ -103,6 +112,30 @@ browser. Two authoring paths, picked by diagram type:
 - For conceptual/teaching diagrams, read `$SKILL/references/design-principles.md`
   first.
 
+### Architecture map connector rules
+
+The diagram must read as grouped blocks first, connectors second. Use **two visual
+levels**:
+- **Primary:** solid dark grey, clear arrowhead, short path — the main flow/hierarchy.
+- **Secondary:** light grey dashed, lower weight — relations like `save`, `remote`,
+  `diagnostics`, `integrations`, `content`, `currency`. Keep them quiet: they must not
+  dominate, cross the whole canvas, or compete with the colored group frames.
+
+- Prefer **short, local** connectors over long routed paths; use **orthogonal**
+  elbows, diagonals only when short and clear.
+- Don't let secondary lines form large outer loops, run the canvas perimeter, or look
+  like extra containers/frames.
+- Keep lines **20–32 px** off group borders; separate parallel lanes by **12–16 px**;
+  route into the **middle** of a block side, not its rounded corners.
+- **External integrations:** prefer **one** dashed connector from the Core/Orchestrator
+  area to the External group (label `integrations`/`diagnostics`). Only draw a vertical
+  bus if each link has distinct meaning — keep it by the group, no taller than it.
+- **Service rows:** one baseline, equal spacing; prefer simple vertical drops from
+  feature blocks; avoid stacked horizontal lines between tiers.
+- **Foundation:** keep it below the system with one clear connector in, not several.
+
+Full detail and the override knobs: `references/architecture-layout.md`.
+
 ## Example
 
 ```text
@@ -131,3 +164,11 @@ flowchart TD
 - One giant graph → arrow crossings. Split it.
 - Forcing an architecture map through Mermaid `subgraph`s → floating groups and
   cross-canvas edges. Use the Excalidraw JSON path instead.
+- Letting dashed secondary connectors form large outer loops → they read as
+  accidental group frames.
+- Drawing every relationship as a long routed arrow → visual noise. Prefer local
+  connectors and grouped/bus-style relations.
+- Running connector lines too close to colored group borders → they merge with the
+  frame.
+- Making external integration buses too tall or too dark → they overpower the actual
+  integration blocks.
