@@ -100,6 +100,15 @@ test("expandSemantic expands a frame into a tinted rect + title text", () => {
   assert.ok(text.y >= 20 && text.y < 64, "title sits in the top band");
 });
 
+test("expandSemantic gives an accent-role frame its own tint, not the neutral fallback", () => {
+  const accent = expandSemantic([{ frame: true, role: "accent", label: "Hot", x: 0, y: 0, width: 200, height: 120 }]);
+  const unknown = expandSemantic([{ frame: true, role: "nope", label: "X", x: 0, y: 0, width: 200, height: 120 }]);
+  const accentRect = accent.skeleton.find((e) => e.type === "rectangle");
+  const neutralRect = unknown.skeleton.find((e) => e.type === "rectangle");
+  assert.equal(accentRect.backgroundColor, "#fff9db", "accent frame uses its mapped tint");
+  assert.notEqual(accentRect.backgroundColor, neutralRect.backgroundColor, "accent is not the neutral fallback");
+});
+
 test("expandSemantic draws frame titles on the top layer so edges can't hide them", () => {
   const { skeleton } = expandSemantic([
     { frame: true, role: "data", label: "Data", x: 0, y: 0, width: 200, height: 120 },
@@ -159,6 +168,17 @@ test("layoutTiers styles side-group and skip edges as secondary (dashed), primar
   assert.notEqual(primary.strokeStyle, "dashed", "primary tier-flow edge stays solid");
   const skip = layoutTiers(SKIP).filter((e) => e.type === "arrow").find((a) => a.label && a.label.text === "direct");
   assert.equal(skip.strokeStyle, "dashed", "skip-tier edge is dashed");
+});
+
+test("layoutTiers edgeRouting:'straight' collapses orthogonal polylines to direct 2-point lines", () => {
+  const ortho = layoutTiers(TIERS).filter((e) => e.type === "arrow");
+  assert.ok(ortho.some((a) => a.points.length > 2), "default routing has multi-segment elbows");
+  const straight = layoutTiers({ ...TIERS, edgeRouting: "straight" }).filter((e) => e.type === "arrow");
+  assert.equal(straight.length, ortho.length, "same edges, just re-routed");
+  for (const a of straight) {
+    assert.equal(a.points.length, 2, "every edge is a direct 2-point line");
+    assert.deepEqual(a.points[1], [a.width, a.height], "endpoint (target entry) is preserved");
+  }
 });
 
 test("layoutTiers draws a single dashed connector to a side group targeted by its id", () => {

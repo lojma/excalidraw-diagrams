@@ -52,6 +52,8 @@ browser. Two authoring paths, picked by diagram type:
    ```
    - `--style` one of `clean` (default), `sketchy`, `colorful`, `mono`.
    - `--style-json '{"strokeColor":"#1862ab","backgroundColor":"#e7f5ff"}'` to override.
+   - `--edges straight` (architecture path) collapses orthogonal elbows into direct
+     diagonals — lighter when the elbow "comb" between tiers dominates. Default is `ortho`.
    - Default opens your external browser. In an embedded/in-app browser
      environment (sandboxes `file://`), use `--serve` and open the printed
      `http://localhost:PORT` URL instead. Use `--no-open` to render without
@@ -155,6 +157,10 @@ flowchart TD
 - The self-review gate needs a Chromium browser; set `CHROME_BIN` if it is not
   auto-detected. If no browser is available, skip the screenshot and ask the
   user to eyeball the live preview.
+- **Rendering needs network.** The generated HTML loads Excalidraw, React, the
+  Mermaid converter, and fonts from CDNs (unpkg/esm.sh) at view time; offline, the
+  page stays blank. Only the SVG icons are bundled locally. A slow CDN can also make
+  the screenshot gate flake — re-run `shot.mjs` once before concluding anything's wrong.
 
 ## Common mistakes
 

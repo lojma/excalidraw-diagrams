@@ -22,7 +22,7 @@
 <pre id="err"></pre>
 <script type="module">
   const TITLE = __TITLE__;
-  const MODE = __MODE__;          // "mermaid" | "json"
+  const MODE = __MODE__;          // "mermaid" | "json" | "scene" (round-tripped .excalidraw, loaded as-is — styling not re-applied)
   const MERMAID = __MERMAID__;    // used when MODE === "mermaid"
   const ELEMENTS = __ELEMENTS__;  // Excalidraw skeleton array, used when MODE === "json"
   const IMAGES = __IMAGES__;      // raw image elements (embedded icons), json mode

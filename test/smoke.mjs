@@ -51,6 +51,15 @@ await smoke("json", buildHtml({
   }));
 }
 
+// Declarative tiers with straight (non-orthogonal) edge routing
+{
+  const spec = JSON.parse(readFileSync(here("./sample-tiers.json"), "utf8"));
+  const { skeleton, images, files } = expandSemantic(layoutTiers({ ...spec, edgeRouting: "straight" }), { color: true });
+  await smoke("tiers-straight", buildHtml({
+    template, title: "smoke-tiers-straight", style, mode: "json", elements: skeleton, images, files,
+  }));
+}
+
 // Round-trip: load a saved .excalidraw scene as-is (full elements + files)
 {
   const scene = JSON.parse(readFileSync(here("./sample-scene.excalidraw"), "utf8"));

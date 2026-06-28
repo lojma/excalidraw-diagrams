@@ -69,6 +69,13 @@ An object (not an array) with `tiers`, optional `sideGroups`, and `edges`:
 | node | `pin: {x,y}` | place this node manually; others lay out around it |
 | tier | `columns` | wrap the tier's nodes into a grid of N columns |
 | top  | `layoutOptions` | `{ nodeGap, tierGap, sideGap, padX, titleBand }` spacing |
+| top  | `edgeRouting` | `"ortho"` (default) right-angle lanes, or `"straight"` direct 2-point diagonals |
+
+**Edge routing.** By default edges route as orthogonal elbows through laned gaps —
+clean right angles, shared bundles. Set `"edgeRouting": "straight"` in the spec (or pass
+`--edges straight` on the command line, which overrides the spec) to collapse them into
+direct diagonals. Straight is lighter when the elbow "comb" between two tiers dominates;
+orthogonal is clearer when many edges share a gap. Endpoints are identical either way.
 
 ## Order nodes to avoid crossings
 

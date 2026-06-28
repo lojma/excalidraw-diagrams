@@ -8,6 +8,9 @@ import { createServer } from "node:http";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 
+// `fontSize` here is consumed only by the Mermaid path (passed to the parser).
+// On the JSON/tiers path, label sizes come from convertToExcalidrawElements'
+// defaults (and the fixed title/arrow-label sizes in expandSemantic/layoutTiers).
 export const STYLE_PRESETS = {
   clean:    { strokeColor: "#343a40", backgroundColor: "#f8f9fa", arrowColor: "#495057", roundness: 3, strokeWidth: 1.5, fillStyle: "solid",   fontFamily: 1, viewBackgroundColor: "#ffffff", fontSize: 18 },
   sketchy:  { strokeColor: "#343a40", backgroundColor: "#fff9db", arrowColor: "#495057", roundness: 3, strokeWidth: 2,   fillStyle: "hachure", fontFamily: 1, viewBackgroundColor: "#ffffff", fontSize: 18 },
@@ -39,6 +42,7 @@ const FRAME_COLORS = {
   service:  { backgroundColor: "#eef6ff", strokeColor: "#74c0fc", title: "#1c7ed6" },
   data:     { backgroundColor: "#ebfbee", strokeColor: "#8ce99a", title: "#2f9e44" },
   external: { backgroundColor: "#fff4e6", strokeColor: "#ffc078", title: "#e8590c" },
+  accent:   { backgroundColor: "#fff9db", strokeColor: "#ffe066", title: "#f08c00" },
   neutral:  { backgroundColor: "#f8f9fa", strokeColor: "#ced4da", title: "#868e96" },
 };
 const ICONS_DIR = join(HERE, "icons");
@@ -320,6 +324,17 @@ export function layoutTiers(spec) {
     else emitArrow([[a.x - 4, a.cy], [b.x + b.w + 6, b.cy]], e.label);
   }
 
+  // Optional: collapse every orthogonal polyline into a direct 2-point line.
+  // `edgeRouting: "straight"` (CLI: --edges straight) trades the clean right-angle
+  // lanes for shorter, lighter diagonals — better when the elbow "comb" between
+  // tiers dominates. Endpoints (source-exit / target-entry) are preserved.
+  if (spec.edgeRouting === "straight") {
+    for (const el of edges) {
+      if (el.type === "arrow" && Array.isArray(el.points) && el.points.length > 2)
+        el.points = [[0, 0], el.points[el.points.length - 1]];
+    }
+  }
+
   return [...frames, ...nodes, ...edges];
 }
 
@@ -346,6 +361,7 @@ function parseArgs(argv) {
     else if (a === "--out") args.out = argv[++i];
     else if (a === "--style") args.style = argv[++i];
     else if (a === "--no-color") args.noColor = true;
+    else if (a === "--edges") args.edges = argv[++i];
     else if (a === "--style-json") args.styleJson = argv[++i];
     else if (a === "--port") args.port = Number(argv[++i]);
     else args._.push(a);
@@ -386,7 +402,9 @@ export async function main(argv) {
     mode = "json";
     const raw = JSON.parse(readFileSync(args.fromJson, "utf8"));
     // An array is a manual skeleton; an object with `tiers` is a declarative
-    // auto-layout spec that we place first, then expand.
+    // auto-layout spec that we place first, then expand. --edges overrides the
+    // spec's own edgeRouting (straight | ortho).
+    if (!Array.isArray(raw) && args.edges) raw.edgeRouting = args.edges;
     const skeleton = Array.isArray(raw) ? raw : layoutTiers(raw);
     if (!Array.isArray(raw) && raw.title && !args.title) args.title = raw.title;
     const color = !args.noColor && args.style !== "mono";
