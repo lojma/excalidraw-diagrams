@@ -76,7 +76,7 @@ retry loop:
   { "type": "rectangle", "role": "data",                      "x": 1290, "y": 185, "width": 160, "height": 56, "label": { "text": "Delivered" } },
 
   { "type": "arrow", "x": 230, "y": 153, "width": 80,  "height": 55,  "points": [[0,0],[80,55]],   "endArrowhead": "arrow" },
-  { "type": "arrow", "x": 230, "y": 213, "width": 80,  "height": 0,   "points": [[0,0],[80,0]],    "endArrowhead": "arrow", "label": { "text": "enqueue" } },
+  { "type": "arrow", "x": 230, "y": 213, "width": 80,  "height": 0,   "points": [[0,0],[80,0]],    "endArrowhead": "arrow" },
   { "type": "arrow", "x": 230, "y": 273, "width": 80,  "height": -42, "points": [[0,0],[80,-42]],  "endArrowhead": "arrow" },
 
   { "type": "arrow", "x": 460, "y": 213, "width": 80,  "height": 0,   "points": [[0,0],[80,0]],    "endArrowhead": "arrow" },
