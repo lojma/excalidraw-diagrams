@@ -4,12 +4,12 @@
     "name": "lojma",
     "email": "d.lojma@gmail.com"
   },
-  "description": "Live, editable Excalidraw diagrams (flows, sequences, architecture) authored from Mermaid.",
+  "description": "Design live, editable Excalidraw diagrams (flows, pipelines, state machines, architecture) — hand-authored for quality, Mermaid for simple flows.",
   "plugins": [
     {
       "name": "excalidraw-diagrams",
       "source": "./",
-      "description": "Render flows, sequences, and architecture as live, editable Excalidraw diagrams in the browser."
+      "description": "Design live, editable Excalidraw diagrams (flows, pipelines, state machines, architecture) in the browser."
     }
   ]
 }

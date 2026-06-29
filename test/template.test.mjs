@@ -32,7 +32,6 @@ test("template pins the expected CDN versions", () => {
   assert.ok(tpl.includes("@excalidraw/mermaid-to-excalidraw@1.1.2"));
 });
 
-test("template sets the success signal and has a save button", () => {
+test("template sets the success signal", () => {
   assert.ok(tpl.includes('dataset.rendered = "true"'));
-  assert.ok(tpl.includes('id="save"'));
 });

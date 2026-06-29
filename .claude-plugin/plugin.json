@@ -1,7 +1,7 @@
 {
   "name": "excalidraw-diagrams",
-  "version": "0.1.0",
-  "description": "Render flows, sequences, and architecture as live, editable Excalidraw diagrams in the browser. Mermaid-authored, auto-laid-out, no build step.",
+  "version": "0.2.0",
+  "description": "Design live, editable Excalidraw diagrams (flows, pipelines, state machines, architecture) in the browser. Hand-authored JSON for quality layouts, Mermaid for simple flows, no build step.",
   "author": {
     "name": "lojma",
     "email": "d.lojma@gmail.com"
