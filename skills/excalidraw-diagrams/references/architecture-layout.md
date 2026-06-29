@@ -104,7 +104,7 @@ edge needs no "charge" label. A label shared by a whole converging bundle is sho
 
 Dense gaps route as orthogonal lanes, but lanes can still get busy and individual
 edges may cross a lane. Two escape hatches:
-- **Drag-refine:** open the diagram, drag nodes, click 💾 Save .excalidraw, then
+- **Drag-refine:** open the diagram, drag nodes, save it (hamburger menu → Save to...), then
   `render.mjs --from-excalidraw saved.excalidraw` to keep editing.
 - **Full control:** drop to the manual skeleton path (`references/architecture-json.md`),
   where you set every coordinate and arrow route yourself.
