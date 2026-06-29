@@ -1,0 +1,39 @@
+name: version-bump
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  bump:
+    runs-on: ubuntu-latest
+    # Skip the bot's own bump commits (GITHUB_TOKEN pushes also don't re-trigger,
+    # so this is belt-and-suspenders against any loop).
+    if: ${{ !contains(github.event.head_commit.message, '[skip ci]') }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Compute and apply the version bump
+        id: bump
+        run: |
+          COMMIT_MESSAGES="$(jq -r '.commits[].message' "$GITHUB_EVENT_PATH")"
+          export COMMIT_MESSAGES
+          NEW="$(node scripts/bump-version.mjs)"
+          echo "new=$NEW" >> "$GITHUB_OUTPUT"
+      - name: Commit and push the bump
+        run: |
+          if git diff --quiet -- .claude-plugin/plugin.json; then
+            echo "No version change to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .claude-plugin/plugin.json
+          git commit -m "chore: bump version to ${{ steps.bump.outputs.new }} [skip ci]"
+          git push
