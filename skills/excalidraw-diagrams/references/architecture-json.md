@@ -1,9 +1,15 @@
-# Authoring architecture maps as Excalidraw JSON
+# Authoring diagrams as a manual Excalidraw skeleton
 
-Use this for **system / architecture maps with grouped components**. Mermaid's dagre
-layout handles these poorly — floating groups joined by long cross-canvas edges, circle
-text wrapping mid-word ("Redi/s"), subgraph labels colliding with arrowheads. Hand-placing
-the blocks wins. Render with:
+This manual skeleton is **the quality path for any non-trivial diagram** — both
+**architecture/system maps** and **staged flows** — wherever you want to place blocks and
+route arrows yourself instead of handing layout to dagre. Mermaid's auto-layout handles
+these poorly: floating groups joined by long cross-canvas edges, circle text wrapping
+mid-word ("Redi/s"), subgraph labels colliding with arrowheads, sparse looping flows.
+Hand-placing the blocks wins.
+
+The element forms below are shared. This page focuses on **architecture maps**; for the
+**staged-flow** layout recipe (stage lanes, decision diamonds, local retry loops) see
+`references/flow-layout.md`, which uses these exact forms. Render either with:
 
 ```bash
 node "$SKILL/render.mjs" --from-json diagram.json --title "Architecture"

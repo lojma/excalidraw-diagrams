@@ -25,16 +25,21 @@ Don't add color just to fill space.
 - `TD` (top-down): hierarchies, decision trees, request flows
 - `LR` (left-right): pipelines, sequences-as-flow, before→after
 
-## Group with subgraphs
-Architecture maps stay readable when components are grouped into labeled
-`subgraph` regions (Backend / Frontend / External). Groups are the single
-biggest readability win for system maps.
+## Group explicitly
+Grouping related components into labeled regions (Backend / Frontend / External,
+or one lane per flow stage) is the single biggest readability win. For real
+maps and staged flows, author the groups as frames on the **Excalidraw JSON
+path** (`references/architecture-layout.md`, `references/architecture-json.md`,
+`references/flow-layout.md`) where you control placement — Mermaid `subgraph`s
+are only worth it for a light, simple grouping.
 
-## Split before it gets dense
+## When it gets dense, change paths, don't just split
 dagre routes arrows around blocks, but straight-line edges between far-apart
-nodes can still cross in a crowded graph. If a diagram has more than ~12 nodes
-or many long edges, split it into two diagrams (overview + detail) instead of
-forcing everything into one.
+nodes still cross in a crowded graph, and grouped/looping flows go sparse. Past
+~12 nodes, or with grouping/queues/retries, the fix is usually to **move to the
+JSON path** and lay the diagram out by tier or stage — not to keep fighting
+Mermaid. Splitting into overview + detail is a fallback when even a hand-authored
+diagram would be too much for one canvas.
 
 ## Keep labels short
 Node text is a handle, not a sentence. Put detail in your explanation to the
